@@ -1,6 +1,5 @@
 ---
-title: "visualizations"
-
+title: "Visualizations"
 ---
 
 
