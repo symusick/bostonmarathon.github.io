@@ -1,5 +1,0 @@
----
-title: "Weather Exploration"
-output: html_document
----
-

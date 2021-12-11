@@ -1,9 +1,13 @@
 ---
-title: "<3"
+title: "Thank you!!!"
 output: html_document
 ---
 
 ![](https://media.giphy.com/media/OEvhBHIZ0E9X1LuuAf/giphy.gif)
 
 
-Thank you to Jeff and all of the TAs for a great semester! Special thanks to Tessa for her help with this project!
+Thank you to Jeff and all of the TAs for a great semester! 
+
+Special thanks to Tessa for her help with this project!
+
+-Hugo, Suhani, Tamara, Claire, and Sydney

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>data</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="report.html">Report</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Visualizations
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="demo.html">Demographics</a>
+    </li>
+    <li>
+      <a href="geo.html">Geographic Exploration</a>
+    </li>
+    <li>
+      <a href="weather.html">Weather Exploration</a>
+    </li>
+    <li>
+      <a href="time.html">Winning Time Trends</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="analysis.html">Analysis</a>
+</li>
+<li>
+  <a href="authors.html">Authors</a>
+</li>
+<li>
+  <a href="heart.html">&lt;3</a>
+</li>
+<li>
+  <a href="http://github.com/symusick/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">data</h1>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)
+library(viridis)
+library(ggridges)
+library(patchwork)
+library(readxl)
+library(leaflet)
+library(plotly)
+library(scales)
+library(ggplot2)
+library(httr)
+library(rvest)</code></pre>
+<div id="data-cleaning" class="section level1">
+<h1>DATA CLEANING</h1>
+<pre class="r"><code>years_1 &lt;- c(1900:2012, 2014)
+years_2 &lt;- c(2015:2019)
+importing_data = function(x){
+ 
+  if(str_detect(x, str_c(years_1, collapse = &quot;|&quot;))) {
+  read_csv(x, na = c(&quot;NULL&quot;, &quot;&quot;, &quot;0&quot;), col_types = &quot;cicccciiiicc&quot;) 
+  } 
+  
+  else if(str_detect(x, str_c(years_2, collapse = &quot;|&quot;))){
+    read_csv(x, na = c(&quot;NULL&quot;, &quot;&quot;, &quot;0&quot;), col_types = &quot;cccicccccccccccccccccciiiiccc&quot;)
+  }
+}
+boston_df &lt;- 
+  tibble(list.files(&quot;data&quot;, full.names = TRUE)) %&gt;% 
+  setNames(&quot;file_name&quot;) %&gt;% 
+  mutate(data = map(file_name, importing_data)) %&gt;% 
+  unnest(data) %&gt;% 
+  mutate(year = readr::parse_number(file_name),
+         city = coalesce(city, residence),
+         display_name = str_replace_all(display_name, &quot;[^a-zA-Z0-9]&quot;, &quot; &quot;)) %&gt;% 
+  mutate(country_residence = replace(country_residence, country_residence == &quot;AHO&quot;, &quot;Netherland Antilles&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ALB&quot;, &quot;Albania&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ALG&quot;, &quot;Algeria&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;AND&quot;, &quot;Andorra&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ARG&quot;, &quot;Argentina&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Argenti&quot;, &quot;Argentina&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;AUS&quot;, &quot;Australia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Austral&quot;, &quot;Australia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;AUT&quot;, &quot;Austria&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BAH&quot;, &quot;Bahamas&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BAR&quot;, &quot;Barbados&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Barbado&quot;, &quot;Barbados&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BDI&quot;, &quot;Burundi&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BLR&quot;, &quot;Belarus&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BEL&quot;, &quot;Belgium&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BER&quot;, &quot;Bermuda&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BRA&quot;, &quot;Brazil&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BRN&quot;, &quot;Brunei&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;BUL&quot;, &quot;Bulgaria&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;CAN&quot;, &quot;Canada&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;CAY&quot;, &quot;Cayman&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;CHI&quot;, &quot;Chile&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;CHN&quot;, &quot;China&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;COL&quot;, &quot;Colombia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Colombi&quot;, &quot;Colombia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;CRC&quot;, &quot;Costa Rica&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Costa R&quot;, &quot;Costa Rica&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;CRO&quot;, &quot;Croatia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;CYP&quot;, &quot;Cyprus&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;CZE&quot;, &quot;Czech Republic&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Czech R&quot;, &quot;Czech Republic&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;DEN&quot;, &quot;Denmark&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;DOM&quot;, &quot;Dominican Republic&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Dominic&quot;, &quot;Dominican Republic&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ECU&quot;, &quot;Ecuador&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;EGY&quot;, &quot;Egypt&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;El Salv&quot;, &quot;El Salvador&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ESA&quot;, &quot;El Salvador&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ESP&quot;, &quot;Spain&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;EST&quot;, &quot;Estonia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ETH&quot;, &quot;Ethiopia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Ethiopi&quot;, &quot;Ethiopia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Faroe I&quot;, &quot;Faroe Islands&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;FIN&quot;, &quot;Finland&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;FLK&quot;, &quot;Falkland Islands&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;FRA&quot;, &quot;France&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;GBR&quot;, &quot;England&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;GER&quot;, &quot;Germany&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;GRE&quot;, &quot;Greece&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;GRN&quot;, &quot;Greenland&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;GUA&quot;, &quot;Guatemala&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Guatema&quot;, &quot;Guatemala&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;HKG&quot;, &quot;Hong Kong&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Hong Ko&quot;, &quot;Hong Kong&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;HON&quot;, &quot;Honduras&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Hondura&quot;, &quot;Honduras&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;HUN&quot;, &quot;Hungary&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;INA&quot;, &quot;Indonesia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Indones&quot;, &quot;Indonesia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;IND&quot;, &quot;India&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;IRL&quot;, &quot;Ireland&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ISL&quot;, &quot;Iceland&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ISR&quot;, &quot;Israel&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ITA&quot;, &quot;Italy&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;JAM&quot;, &quot;Jamaica&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;JPN&quot;, &quot;Japan&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;JOR&quot;, &quot;Jordan&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;KEN&quot;, &quot;Kenya&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;KOR&quot;, &quot;Korea&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Korea,&quot;, &quot;Korea&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;KSA&quot;, &quot;Saudi Arabia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;KUW&quot;, &quot;Kuwait&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;LAT&quot;, &quot;Latvia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;LIE&quot;, &quot;Liechtenstein&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Liechte&quot;, &quot;Liechtenstein&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Lithuan&quot;, &quot;Lithuania&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;LTU&quot;, &quot;Lithuania&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;LUX&quot;, &quot;Luxembourg&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Luxembo&quot;, &quot;Luxembourg&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Macao S&quot;, &quot;Macao&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Macedon&quot;, &quot;Macedonia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Malaysi&quot;, &quot;Malaysia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;MAR&quot;, &quot;Martinique&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Martini&quot;, &quot;Martinique&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;MAS&quot;, &quot;Malaysia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;MEX&quot;, &quot;Mexico&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;MGL&quot;, &quot;Mongolia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;MLT&quot;, &quot;Malta&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;NCA&quot;, &quot;Nicaragua&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;NED&quot;, &quot;Netherlands&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Netherl&quot;, &quot;Netherlands&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;New Zea&quot;, &quot;New Zealand&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;NGR&quot;, &quot;Nigeria&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;NOR&quot;, &quot;Norway&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;NZL&quot;, &quot;New Zealand&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;OMA&quot;, &quot;Oman&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;PAK&quot;, &quot;Pakistan&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Palesti&quot;, &quot;Palestine&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;PAN&quot;, &quot;Panama&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;PAR&quot;, &quot;Paraguay&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Paragua&quot;, &quot;Paraguay&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;PER&quot;, &quot;Peru&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;PHI&quot;, &quot;Philippines&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Philipp&quot;, &quot;Philippines&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;POL&quot;, &quot;Poland&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;POR&quot;, &quot;Portugal&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Portuga&quot;, &quot;Portugal&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Puerto&quot;, &quot;Puerto Rico&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;QAT&quot;, &quot;Qatar&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ROU&quot;, &quot;Romania&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Saudi A&quot;, &quot;Saudi Arabia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;SIN&quot;, &quot;Singapore&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Singapo&quot;, &quot;Singapore&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;SLO&quot;, &quot;Slovenia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Slovaki&quot;, &quot;Slovakia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Sloveni&quot;, &quot;Slovenia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;SMR&quot;, &quot;San Marino&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;South A&quot;, &quot;South Africa&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;SRB&quot;, &quot;Serbia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Sri Lan&quot;, &quot;Sri Lanka&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;SUI&quot;, &quot;Switzerland&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;SVK&quot;, &quot;Slovakia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;SWE&quot;, &quot;Sweden&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Switzer&quot;, &quot;Switzerland&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;TCA&quot;, &quot;Turks and Caicos&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;THA&quot;, &quot;Thailand&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Thailan&quot;, &quot;Thailand&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;TPE&quot;, &quot;Taipei&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;TRI&quot;, &quot;Trinidad&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Trinida&quot;, &quot;Trinidad&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;TUR&quot;, &quot;Turkey&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;TWN&quot;, &quot;Taiwan&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;UAE&quot;, &quot;United Arab Emirates&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;UGA&quot;, &quot;Uganda&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;UKR&quot;, &quot;Ukraine&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;United&quot;, &quot;United States&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;URU&quot;, &quot;Uruguay&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;USA&quot;, &quot;United States&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;VEN&quot;, &quot;Venezuela&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Venezue&quot;, &quot;Venezuela&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;VGB&quot;, &quot;Virgin Islands&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;VIE&quot;, &quot;Vietnam&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;ZIM&quot;, &quot;Zimbabwe&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;RSA&quot;, &quot;South Africa&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;RUS&quot;, &quot;Russia&quot;)) %&gt;%
+  mutate(country_residence = replace(country_residence, country_residence == &quot;Russian&quot;, &quot;Russia&quot;)) %&gt;%
+  filter(!is.na(display_name)) %&gt;% 
+  select(-file_name, -residence, -first_name, -last_name)</code></pre>
+<pre class="r"><code>boston_df$continent[boston_df$country_residence %in% c(
+  &quot;Australia&quot;, 
+  &quot;New Zealand&quot;
+  )] &lt;- &quot;Australia&quot;
+boston_df$continent[boston_df$country_residence %in% c(
+  &quot;Algeria&quot;,
+  &quot;Burundi&quot;,
+  &quot;Egypt&quot;,
+  &quot;Ethiopia&quot;,
+  &quot;Kenya&quot;,  
+  &quot;Morocco&quot;, 
+  &quot;Nigeria,&quot;,  
+  &quot;South Africa&quot;, 
+  &quot;Uganda&quot;,
+  &quot;Zimbabwe&quot;
+  )] &lt;- &quot;Africa&quot;
+boston_df$continent[boston_df$country_residence %in% c(
+ &quot;China&quot;, 
+  &quot;Hong Kong&quot;, 
+  &quot;India&quot;,            
+  &quot;Indonesia&quot;,
+  &quot;Israel&quot;,  
+  &quot;Japan&quot;,               
+  &quot;Jordan&quot;, 
+  &quot;Korea&quot;,   
+  &quot;Malaysia&quot;,
+  &quot;Mongolia&quot;,              
+  &quot;Nepal&quot;,  
+  &quot;Oman&quot;, 
+  &quot;Pakistan&quot;,            
+  &quot;Palestine&quot;, 
+  &quot;Philippines&quot;, 
+  &quot;Qatar&quot;,   
+  &quot;Russia&quot;, 
+  &quot;Saudi Arabia&quot;,
+  &quot;Singapore&quot;,  
+  &quot;Sri Lanka&quot;,  
+  &quot;Taipei&quot;,               
+  &quot;Taiwan&quot;,            
+  &quot;Thailand&quot;,  
+  &quot;Vietnam&quot;, 
+  &quot;Brunei&quot;, 
+  &quot;Kuwait&quot;,                         
+  &quot;Macao&quot;,
+  &quot;United Arab Emirates&quot;                                  
+  )] &lt;- &quot;Asia&quot;
+boston_df$continent[boston_df$country_residence %in% c(
+  &quot;Canada&quot;,  
+  &quot;Mexico&quot;, 
+  &quot;Puerto Rico&quot;,
+  &quot;United States&quot;,
+  &quot;Bahamas&quot;,                        
+  &quot;Barbados&quot;,
+  &quot;Belize&quot;,              
+  &quot;Bermuda&quot;, 
+  &quot;Cayman&quot;,                
+  &quot;Dominican Republic&quot;,  
+  &quot;Jamaica&quot;, 
+  &quot;Martinique&quot;,
+  &quot;Virgin Islands&quot;                                                           
+  )] &lt;- &quot;North America&quot;
+boston_df$continent[boston_df$country_residence %in% c(
+  &quot;Argentina&quot;, 
+  &quot;Bolivia&quot;,                
+  &quot;Brazil&quot;, 
+  &quot;Chile&quot;, 
+  &quot;Colombia&quot;,           
+  &quot;Costa Rica&quot;,  
+  &quot;Ecuador&quot;,  
+  &quot;El Salvador&quot;, 
+  &quot;Guatemala&quot;,             
+  &quot;Honduras&quot;, 
+  &quot;Nicaragua&quot;,  
+  &quot;Panama&quot;,             
+  &quot;Paraguay&quot;, 
+  &quot;Peru&quot;,  
+  &quot;Uruguay&quot;,            
+  &quot;Venezuela&quot;,
+  &quot;Aruba&quot;,
+  &quot;Falkland Island&quot;,
+  &quot;Trinidad&quot;
+  )] &lt;- &quot;South America&quot;
+boston_df$continent[boston_df$country_residence %in% c(
+  &quot;Albania&quot;, 
+  &quot;Andorra&quot;,            
+  &quot;Armenia&quot;,
+  &quot;Austria&quot;,
+  &quot;Bahrain&quot;,
+  &quot;Belarus&quot;,
+  &quot;Belgium&quot;,  
+  &quot;Bulgaria&quot;, 
+  &quot;Croatia&quot;, 
+  &quot;Cyprus&quot;,       
+  &quot;Czech Republic&quot;,              
+  &quot;Denmark&quot;,   
+  &quot;England&quot;, 
+  &quot;Finland&quot;,               
+  &quot;France&quot;,              
+  &quot;Germany&quot;,               
+  &quot;Greece&quot;, 
+  &quot;Greenland&quot;, 
+  &quot;Hungary&quot;,              
+  &quot;Iceland&quot;,
+  &quot;Ireland&quot;,                             
+  &quot;Italy&quot;, 
+  &quot;Latvia&quot;,        
+  &quot;Liechtenstein&quot;,            
+  &quot;Lithuania&quot;, 
+  &quot;Luxembourg&quot;, 
+  &quot;Netherland Antilles&quot;,          
+  &quot;Netherlands&quot;, 
+  &quot;Norway&quot;,    
+  &quot;Poland&quot;,             
+  &quot;Portugal&quot;, 
+  &quot;Romania&quot;,
+  &quot;Serbia&quot;,              
+  &quot;Slovakia&quot;,             
+  &quot;Slovenia&quot;,
+  &quot;Spain&quot;,            
+  &quot;Sweden&quot;,          
+  &quot;Switzerland&quot;, 
+  &quot;Turkey&quot;,     
+  &quot;Turks and Caicos&quot;,
+  &quot;Ukraine&quot;,
+  &quot;Bosnia&quot;, 
+  &quot;Estonia&quot;,                
+  &quot;Faroe Islands&quot;, 
+  &quot;Macedonia&quot;,             
+  &quot;Malta&quot;,     
+  &quot;Moldova&quot;,               
+  &quot;Monaco&quot;, 
+  &quot;San Marino&quot;  
+  )] &lt;- &quot;Europe&quot;</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
