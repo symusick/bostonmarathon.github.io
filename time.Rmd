@@ -323,10 +323,7 @@ boston_df$continent[boston_df$country_residence %in% c(
   "Monaco", 
   "San Marino"  
   )] <- "Europe"
-```
 
-
-```{r}
 ## Cleaning data for winner over time plots
 plotly_win_df = 
   boston_df %>% 
@@ -337,6 +334,8 @@ plotly_win_df =
       place_overall = as.numeric(place_overall)
     )
 ```
+
+<br>
 
 # Winning Times by Year
 
