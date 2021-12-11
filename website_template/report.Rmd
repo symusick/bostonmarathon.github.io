@@ -1,9 +1,23 @@
 ---
-title: "Report"
+title: "Project Report"
 ---
 
-### About this site
+## Introduction
 
-Sometimes you need to say a bit about the site -- how it was made, where it's hosted, where the source code can be found. 
+### Assessing the Boston Marathon’s participants and champions
 
-If this is for a project or analysis, I recommend giving some details about the R package versions that you used to create the content.
+A project exploring the demographics of Boston’s Marathon participants, trends over time starting from the 1900’s, and the variables associated with winning the marathon. 
+
+<img src="bostonpic.jpeg" alt="Avatar" class="avatar">
+
+## Project Overview 
+
+### Motivation: Provide an overview of the project goals and motivation.
+
+According to Running USA National Runner Survey, six in ten runners are women and half of runners are ages 35 to 54 with an average of 40 years old. As well, runners in the 30- to 50-year-old age group are the fastest. The overall goal of our project is to analyze the demographics of participants and winners of the Boston Marathon specifically from 1900-2019 to uncover trends within these variables over time. We will begin by analyzing the overall demographics of those who participated in the Boston Marathon from 1900-2019, by looking at variables such as: age, gender, state, and country of residence. We are also interested in the same demographic variables of the winners of the Marathon each year. Additionally, we will run statistical analysis to see what variables are associated with the fastest running times. Upon further research, we found that weather is a major factor in run times and added this to our analysis. 
+
+* [Marathon statistics](https://www.livestrong.com/article/13763749-marathon-statistics/)
+* [Demographic trends](https://www.26-2.org/marathon-center/demographics-trends/)
+
+
+

@@ -1,0 +1,1008 @@
+---
+title: "Data Science Final Project"
+author: "Sydney Musick (sm4993), Suhani Patel (sp3903), Tamara Hofer (th2891), Hugo Wang (xw2757), Claire Mobley (cm4070)"
+date: 2021-11-21
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: hide
+    theme: yeti
+    highlight: haddock
+---
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+
+```{r}
+library(tidyverse)
+library(viridis)
+library(ggridges)
+library(patchwork)
+library(readxl)
+library(leaflet)
+library(plotly)
+library(scales)
+library(ggplot2)
+library(httr)
+library(rvest)
+```
+
+# HUGO
+
+# Data Importing and Cleaning  
+```{r}
+years_1 <- c(1900:2012, 2014)
+years_2 <- c(2015:2019)
+importing_data = function(x){
+ 
+  if(str_detect(x, str_c(years_1, collapse = "|"))) {
+  read_csv(x, na = c("NULL", "", "0"), col_types = "cicccciiiicc") 
+  } 
+  
+  else if(str_detect(x, str_c(years_2, collapse = "|"))){
+    read_csv(x, na = c("NULL", "", "0"), col_types = "cccicccccccccccccccccciiiiccc")
+  }
+}
+
+boston_df <- 
+  tibble(list.files("data", full.names = TRUE)) %>% 
+  setNames("file_name") %>% 
+  mutate(data = map(file_name, importing_data)) %>% 
+  unnest(data) %>% 
+  mutate(year = readr::parse_number(file_name),
+        city = coalesce(city, residence),
+        display_name = str_replace_all(display_name, "[^a-zA-Z0-9]", " ")) %>% 
+  mutate(country_residence = replace(country_residence, country_residence == "AHO", "Netherland Antilles")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ALB", "Albania")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ALG", "Algeria")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "AND", "Andorra")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ARG", "Argentina")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Argenti", "Argentina")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "AUS", "Australia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Austral", "Australia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "AUT", "Austria")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BAH", "Bahamas")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BAR", "Barbados")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Barbado", "Barbados")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BDI", "Burundi")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BLR", "Belarus")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BEL", "Belgium")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BER", "Bermuda")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BRA", "Brazil")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BRN", "Brunei")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BUL", "Bulgaria")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CAN", "Canada")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CAY", "Cayman")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CHI", "Chile")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CHN", "China")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "COL", "Colombia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Colombi", "Colombia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CRC", "Costa Rica")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Costa R", "Costa Rica")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CRO", "Croatia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CYP", "Cyprus")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CZE", "Czech Republic")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Czech R", "Czech Republic")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "DEN", "Denmark")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "DOM", "Dominican Republic")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Dominic", "Dominican Republic")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ECU", "Ecuador")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "EGY", "Egypt")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "El Salv", "El Salvador")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ESA", "El Salvador")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ESP", "Spain")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "EST", "Estonia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ETH", "Ethiopia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Ethiopi", "Ethiopia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Faroe I", "Faroe Islands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "FIN", "Finland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "FLK", "Falkland Islands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "FRA", "France")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GBR", "England")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GER", "Germany")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GRE", "Greece")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GRN", "Greenland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GUA", "Guatemala")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Guatema", "Guatemala")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "HKG", "Hong Kong")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Hong Ko", "Hong Kong")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "HON", "Honduras")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Hondura", "Honduras")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "HUN", "Hungary")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "INA", "Indonesia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Indones", "Indonesia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "IND", "India")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "IRL", "Ireland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ISL", "Iceland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ISR", "Israel")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ITA", "Italy")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "JAM", "Jamaica")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "JPN", "Japan")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "JOR", "Jordan")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "KEN", "Kenya")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "KOR", "Korea")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Korea,", "Korea")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "KSA", "Saudi Arabia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "KUW", "Kuwait")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "LAT", "Latvia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "LIE", "Liechtenstein")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Liechte", "Liechtenstein")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Lithuan", "Lithuania")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "LTU", "Lithuania")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "LUX", "Luxembourg")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Luxembo", "Luxembourg")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Macao S", "Macao")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Macedon", "Macedonia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Malaysi", "Malaysia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MAR", "Martinique")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Martini", "Martinique")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MAS", "Malaysia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MEX", "Mexico")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MGL", "Mongolia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MLT", "Malta")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NCA", "Nicaragua")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NED", "Netherlands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Netherl", "Netherlands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "New Zea", "New Zealand")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NGR", "Nigeria")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NOR", "Norway")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NZL", "New Zealand")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "OMA", "Oman")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PAK", "Pakistan")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Palesti", "Palestine")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PAN", "Panama")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PAR", "Paraguay")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Paragua", "Paraguay")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PER", "Peru")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PHI", "Philippines")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Philipp", "Philippines")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "POL", "Poland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "POR", "Portugal")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Portuga", "Portugal")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Puerto", "Puerto Rico")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "QAT", "Qatar")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ROU", "Romania")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Saudi A", "Saudi Arabia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SIN", "Singapore")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Singapo", "Singapore")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SLO", "Slovenia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Slovaki", "Slovakia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Sloveni", "Slovenia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SMR", "San Marino")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "South A", "South Africa")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SRB", "Serbia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Sri Lan", "Sri Lanka")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SUI", "Switzerland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SVK", "Slovakia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SWE", "Sweden")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Switzer", "Switzerland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TCA", "Turks and Caicos")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "THA", "Thailand")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Thailan", "Thailand")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TPE", "Taipei")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TRI", "Trinidad")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Trinida", "Trinidad")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TUR", "Turkey")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TWN", "Taiwan")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "UAE", "United Arab Emirates")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "UGA", "Uganda")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "UKR", "Ukraine")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "United", "United States")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "URU", "Uruguay")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "USA", "United States")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "VEN", "Venezuela")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Venezue", "Venezuela")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "VGB", "Virgin Islands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "VIE", "Vietnam")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ZIM", "Zimbabwe")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "RSA", "South Africa")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "RUS", "Russia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Russian", "Russia")) %>%
+  filter(!is.na(display_name)) %>% 
+  select(-file_name, -residence, -first_name, -last_name) %>% 
+  rename("country_citizenship" = "contry_citizenship" )
+```
+
+<<<<<<< HEAD
+```{r}
+boston_df$continent[boston_df$country_residence %in% c(
+  "Australia", 
+  "New Zealand"
+  )] <- "Australia"
+boston_df$continent[boston_df$country_residence %in% c(
+  "Algeria",
+  "Burundi",
+  "Egypt",
+  "Ethiopia",
+  "Kenya",  
+  "Morocco", 
+  "Nigeria,",  
+  "South Africa", 
+  "Uganda",
+  "Zimbabwe"
+  )] <- "Africa"
+boston_df$continent[boston_df$country_residence %in% c(
+ "China", 
+  "Hong Kong", 
+  "India",            
+  "Indonesia",
+  "Israel",  
+  "Japan",               
+  "Jordan", 
+  "Korea",   
+  "Malaysia",
+  "Mongolia",              
+  "Nepal",  
+  "Oman", 
+  "Pakistan",            
+  "Palestine", 
+  "Philippines", 
+  "Qatar",   
+  "Russia", 
+  "Saudi Arabia",
+  "Singapore",  
+  "Sri Lanka",  
+  "Taipei",               
+  "Taiwan",            
+  "Thailand",  
+  "Vietnam", 
+  "Brunei", 
+  "Kuwait",                         
+  "Macao",
+  "United Arab Emirates"                                  
+  )] <- "Asia"
+boston_df$continent[boston_df$country_residence %in% c(
+  "Canada",  
+  "Mexico", 
+  "Puerto Rico",
+  "United States",
+  "Bahamas",                        
+  "Barbados",
+  "Belize",              
+  "Bermuda", 
+  "Cayman",                
+  "Dominican Republic",  
+  "Jamaica", 
+  "Martinique",
+  "Virgin Islands"                                                           
+  )] <- "North America"
+boston_df$continent[boston_df$country_residence %in% c(
+  "Argentina", 
+  "Bolivia",                
+  "Brazil", 
+  "Chile", 
+  "Colombia",           
+  "Costa Rica",  
+  "Ecuador",  
+  "El Salvador", 
+  "Guatemala",             
+  "Honduras", 
+  "Nicaragua",  
+  "Panama",             
+  "Paraguay", 
+  "Peru",  
+  "Uruguay",            
+  "Venezuela",
+  "Aruba",
+  "Falkland Island",
+  "Trinidad"
+  )] <- "South America"
+boston_df$continent[boston_df$country_residence %in% c(
+  "Albania", 
+  "Andorra",            
+  "Armenia",
+  "Austria",
+  "Bahrain",
+  "Belarus",
+  "Belgium",  
+  "Bulgaria", 
+  "Croatia", 
+  "Cyprus",       
+  "Czech Republic",              
+  "Denmark",   
+  "England", 
+  "Finland",               
+  "France",              
+  "Germany",               
+  "Greece", 
+  "Greenland", 
+  "Hungary",              
+  "Iceland",
+  "Ireland",                             
+  "Italy", 
+  "Latvia",        
+  "Liechtenstein",            
+  "Lithuania", 
+  "Luxembourg", 
+  "Netherland Antilles",          
+  "Netherlands", 
+  "Norway",    
+  "Poland",             
+  "Portugal", 
+  "Romania",
+  "Serbia",              
+  "Slovakia",             
+  "Slovenia",
+  "Spain",            
+  "Sweden",          
+  "Switzerland", 
+  "Turkey",     
+  "Turks and Caicos",
+  "Ukraine",
+  "Bosnia", 
+  "Estonia",                
+  "Faroe Islands", 
+  "Macedonia",             
+  "Malta",     
+  "Moldova",               
+  "Monaco", 
+  "San Marino"  
+  )] <- "Europe"
+```
+
+=======
+Data cleaning is 
+>>>>>>> 83d2efa123b27e47bf763165fe99b900fa427509
+
+# SUHANI
+
+# Geographical Analysis of Champions 
+
+## Overview 
+
+*****
+
+We were interested in creating a map with the locations where winners in the Boston marathon were from over the past 120 years. Additionally, we wanted to examine how winner's location changed over time. We also analyzed data from winners in the wheel chair division and compared the results to the men and women's open divsion. 
+
+## Data Cleaning
+
+*****
+
+```{r}
+boston_df2 = boston_df %>% 
+  filter(year > 1999) %>% 
+  filter(overall == 1) %>% 
+  filter(gender == "M") %>% 
+  select(year, city, state, overall, everything()) %>% 
+  drop_na(city) %>% 
+  separate(city, into = c("city", "state", "country"), sep = ",") %>% 
+  select(-country, -state) %>% 
+  writexl::write_xlsx("interactive_map_men.xlsx")
+boston_df3 = boston_df  %>% 
+  filter(year > 1999) %>% 
+  filter(gender_result == 1) %>% 
+  filter(gender == "F") %>% 
+  select(year, city, state, overall, everything()) %>% 
+  drop_na(city) %>% 
+  writexl::write_xlsx("interactive_map_women.xlsx")
+```
+
+```{r}
+map_df = read_excel("data/latitude_longitude_winners.xlsx", sheet = 1) %>% 
+  select(year, city, latitude, longitude, age, gender, official_time, display_name) %>% 
+  rename(place = city) 
+map_df2 = read_excel("data/latitude_longitude_winners.xlsx", sheet = 2) %>% 
+  select(year, city, latitude, longitude, age, gender, official_time, display_name) %>% 
+  rename(place = city) 
+```
+
+```{r}
+men_open = read_excel("data/geo_winners.xlsx", sheet = 4) %>% 
+  janitor::clean_names() %>% 
+  filter(!(year == 2013)) %>% 
+  rename(place = country) %>% 
+  separate(official_time, into = c("data", "official_time"), sep = " (?=[^ ]+$)") %>% 
+  select(-data) 
+lat_long = read_excel("data/lat_long.xlsx") %>% 
+  select(-country) %>% 
+  rename(place = name)
+men_merge <- merge(men_open,lat_long,by="place") %>% 
+  rename(display_name = name) %>% 
+  mutate(gender = "M") 
+men_merge2 = men_merge %>% 
+  mutate(age = NA) %>% 
+  filter(year > 1900) %>% 
+  filter(year < 2000) 
+men_total = rbind(men_merge2, map_df)
+women_open = read_excel("data/geo_winners.xlsx", sheet = 3) %>% 
+  janitor::clean_names() %>% 
+  filter(!(year == 2013)) %>% 
+  rename(place = country) %>% 
+  separate(official_time, into = c("data", "official_time"), sep = " (?=[^ ]+$)") %>% 
+  select(-data) 
+women_merge = merge(women_open, lat_long, by="place") %>% 
+  rename(display_name = name) %>% 
+  mutate(gender = "F") 
+  
+women_merge2 = women_merge %>% 
+  mutate(age = NA) %>% 
+  filter(year > 1900) %>% 
+  filter(year < 2000) 
+woman_total = rbind(women_merge2, map_df2) %>% 
+  drop_na(latitude)
+```
+  
+```{r}
+women_wheelchair = read_excel("data/geo_winners.xlsx", sheet = "women_wheel_chair") %>% 
+    janitor::clean_names() %>% 
+    filter(!(year == 2013)) %>% 
+    separate(official_time, into = c("data", "official_time"), sep = " (?=[^ ]+$)") %>% 
+    select(-data) %>% 
+    mutate(gender = "F")
+men_wheelchair = read_excel("data/geo_winners.xlsx", sheet = "men_wheel_chair") %>% 
+    janitor::clean_names() %>% 
+    separate(official_time, into = c("data", "official_time"), sep = " (?=[^ ]+$)") %>% 
+    select(-data) %>% 
+    mutate(gender = "M")
+wheelchair_merge = rbind(women_wheelchair, men_wheelchair) %>% 
+  rename(place = country)
+wheelchair_total = merge(wheelchair_merge, lat_long, by="place") 
+winners_bind = rbind(women_merge, men_merge)
+```
+
+
+## Plots
+
+*****
+
+### Map of Male Champions Residence 
+```{r}
+map_winners = leaflet(men_total) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addMarkers(lat = ~latitude, lng = ~longitude,
+  popup = paste("Name:", men_total$display_name, "<br>", "Year:", men_total$year,"<br>",  "Official Time:", men_total$official_time, "<br>", "Age:", men_total$age, "<br>", "Gender:", men_total$gender), clusterOptions = markerClusterOptions())
+map_winners
+```
+
+The continent with the higherst number of male winners from 1900 and beyond is North America, specifically the US, followed by Africa. There are 44 winners from the United States, 20 from Kenya, 10 from Japan. A large portion of the winners came from Eldoret and Meru in Kenya. 
+
+*****
+
+### Map of Female Champions Residence 
+```{r}
+map_winners_women = leaflet(woman_total) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addMarkers(lat = ~latitude, lng = ~longitude,
+  popup = paste("Name:", woman_total$display_name, "<br>", "Year:", woman_total$year,"<br>",  "Official Time:", woman_total$official_time, "<br>", "Age:", woman_total$age, "<br>", "Gender:", woman_total$gender), clusterOptions = markerClusterOptions())
+map_winners_women
+```
+
+Africa is the continent with the most winners in the female open division, closely followed by Europe, and North America. Most of the female winners in Africa are from Kenya. This map suggests that a participant's proximity to Boston likely does not play a role in their probability of winning the marathon.
+
+*****
+
+### Plot of Official Times and Country of Residence of Champions by Year in the Open Division
+```{r}
+plot2 = winners_bind %>%
+  mutate(text_label = 
+           str_c("Name: ", display_name, "\nGender: ", gender)) %>% 
+  plot_ly(
+    x = ~year, y = ~official_time, text = ~text_label, color = ~place,
+    type = "scatter") %>% 
+  layout(
+    title = "Official Times of Male and Female Winners each Year by Winner's Country",
+    xaxis = list(title = 'Year'),
+    yaxis = list(title = 'Marathon Time'), 
+    legend = list(title=list(text='Residence')))
+plot2
+```
+
+Over time, the champions of the Boston marathon have been getting faster. While prior to 1950, most of the winners were from the United States and Canada, most of the winners are now from Kenya. Additionally, we can see that the fastest marathon times have been from people from Kenya followed by Ethiopia, and the US.
+
+*****
+
+### Map of Champions Residence in the Wheelchair Division
+```{r}
+map_wheelchair = leaflet(wheelchair_total) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addMarkers(lat = ~latitude, lng = ~longitude,
+  popup = paste("Name:", wheelchair_total$name, "<br>", "Year:", wheelchair_total$year,"<br>", "Official Time:", wheelchair_total$official_time, "<br>", "Gender:", wheelchair_total$gender), clusterOptions = markerClusterOptions())
+map_wheelchair
+```
+
+When assessing the map for the wheelchair division, we can see that 25 winners are from the United States, followed by 19 from Europe, and 10 from Africa. While the male and female open division lack winners from Switzerland, there are 15 winners in the wheelchair division from Switzerland. The fastest time is 1:18 in 2017 by Marcel Hug from Switzerland. 
+
+
+*****
+
+### Plot of Official Times and Country of Residence of Champions by Year in Wheelchair Division 
+```{r}
+plot3 = wheelchair_total %>%
+  mutate(text_label = 
+           str_c("Name: ", name, "\nGender: ", gender)) %>% 
+  plot_ly(
+    x = ~year, y = ~official_time, text = ~text_label, color = ~place,
+    type = "scatter") %>% 
+  layout(
+    title = 'Official Times of Winners each Year in Wheel Chair Division',
+    xaxis = list(title = 'Year'),
+    yaxis = list(title = 'Marathon Time'), 
+    legend = list(title=list(text='Residence')))
+plot3
+```
+
+While there is a downward trend in the official times for the open division, there is no trend in official times for the wheelchair division. Many of the winners pre-2000 are from the United States while many of the winners post-2000 are from South Africa. The lowest time recorded is from an individual in Switzerland. 
+
+*****
+
+# Weather Analysis
+
+## Overview 
+
+*****
+
+We were interested in analyzing the weather patterns such as temperature, wind, and sky conditions during the Boston marathon over time. We were also curious if there was a relationship between weather and the winning time as well as participant average times. 
+
+## Data Cleaning
+
+*****
+
+```{r}
+weather = read_excel("data/weather_conditions.xlsx") %>% 
+  janitor::clean_names() %>% 
+  filter(!(year == 2013)) %>% 
+  separate(wind, into = c("wind_direction", "wind_speed"), sep = "\\s")  %>% 
+  separate(wind_speed, into = c("wind_min", "wind_max"), sep = "-") %>% 
+  mutate(wind_min = as.numeric(wind_min)) %>% 
+  mutate(wind_max = as.numeric(wind_max)) %>% 
+  mutate(wind_speed_average = (wind_min + wind_max)/2)
+weather2 = weather %>% 
+  select(boston_temp, year, wind_speed_average, sky)
+
+winners_bind2 = winners_bind  %>% 
+   filter(year > 1999) 
+boston_df2 = boston_df %>% 
+     filter(year > 1999) 
+  
+merge_weather2 <- merge(weather2,winners_bind2,by="year")
+merge_weather_participants = merge(weather2,boston_df2,by="year") %>% 
+  mutate(boston_temp = as.numeric(boston_temp)) %>% 
+  mutate(seconds = as.numeric(seconds)) 
+```
+
+## Plots
+
+*****
+
+### Plot of Weather during Boston Marathons
+```{r}
+plot4 = weather %>%
+  mutate(text_label = 
+           str_c("Wind Speed Average: ", wind_speed_average)) %>%
+  plot_ly(x = ~year, y = ~boston_temp, text = ~text_label, color= ~ sky, size = ~wind_speed_average,
+          type = "scatter", mode = "markers",  colors = "viridis", 
+          sizes = c(50, 700), marker = list(opacity = 0.7)) %>%
+  layout(
+    title = 'Weather over Time',
+    xaxis = list(title = 'Year'),
+    yaxis = list(title = 'Boston Temperature'), 
+    legend = list(title=list(text='Sky Conditions')))
+plot4
+```
+*Note datapoint size is related to average wind speed.
+
+Over the past 20 years, the temperature in Boston during the marathons has generally stayed between 40-70 degrees and the sky conditions are usually clear. In 2012, there was a particularly hot marathon day with the temperature in the high 80's. Over the past few years, there have been relatively low wind speeds on average with exception to 2015. 
+
+*****
+
+### Wind Analysis during Boston Marathons
+```{r}
+ggplot(data = weather)+
+  geom_segment(aes(x = year, xend = year, y = wind_min, yend = wind_max, colour = wind_direction), size = 5, alpha = 0.6) + 
+  labs(
+    title = "Wind Speed Range During Boston Marathons Over Time",
+    x = "Year",
+    y = "Wind Speed Range (mph)",
+    color='Wind Direction')
+```
+
+In the early 2000's, the wind direction was generally toward the North/northeast and recently has been generally toward the west, northwest direction. There has been relatively low wind speed with little wind speed variability the past few years during the Boston marathon. Around 2010, there were relatively higher wind speeds. In 2007, there was a particularly windy marathon with speeds ranging from 20-30 mph. 
+
+*****
+
+### Comparison between Chamption Times and Weather 
+```{r}
+plot5 = merge_weather2 %>%
+  mutate(text_label = 
+           str_c("Name: ", display_name, "\nYear: ", year, "\nResidence: ", place)) %>% 
+ plot_ly(
+    x = ~boston_temp, y = ~official_time,  text = ~text_label, color = ~sky, size = ~wind_speed_average,
+          type = "scatter", mode = "markers",  colors = "viridis", 
+          sizes = c(50, 700), marker = list(opacity = 0.7)) %>%
+  layout(
+    title = 'Champion Times and Weather',
+    xaxis = list(title = "Boston's Temperature"),
+    yaxis = list(title = 'Official Time'), 
+    legend = list(title=list(text='Sky Conditions')))
+plot5
+```
+*Note datapoint size is related to average wind speed.
+
+The fastest marathon times in the past 20 years have occurred when the temperature is around 55 degrees. At temperatures 55 and below as well as 85 and above, there tends to be higher wind speeds. Although there are only a few data points above 70 degrees, one may hypothesize from the graph that as temperature increases, the fastest marathon time also increases. The fastest time was run was during medium wind speed, 55 degrees, and a clear sky. 
+
+*****
+
+### Comparison between Participant Times and Weather 
+
+```{r}
+plot6 = merge_weather_participants %>% 
+   plot_ly(x = ~boston_temp, y = ~seconds, color = ~sky, type = "box") %>% 
+  layout(
+    title = 'Participant Times by Temperature',
+    xaxis = list(title = "Boston's Temperature"),
+    yaxis = list(title = 'Official Time (seconds)'), 
+    legend = list(title=list(text='Sky Conditions')))
+plot6
+```
+
+As temperature increases, the median marathon time among participants slightly increases. Furthermore, the lowest median marathon time occured around 55 degrees. According to a study called "Import of Environmental Parameters on Marathon Running Performance", the ideal tempature for professional runners is 37 degrees but for nonprofessional athletes is around 50 degrees. We also see that there are many outliers in the higher timepoints because there are likely a handful of very slow runners. 
+
+# TAMARA
+
+#### cleaning data for winner over time plots 
+
+We are interested in looking at the trends of the winning Boston Marathon times from the 1900's to 2019. 
+To do this we first needed to convert data and time variables from `character` to `POSIXCT`. 
+
+```{r}
+plotly_win_df = 
+  boston_df %>% 
+    mutate(
+      official_time = as.POSIXct(official_time, format = "%H:%M:%OS"), 
+      year = as.factor(year),
+      pace = as.POSIXct(pace, format = "%H:%M:%OS"),
+      place_overall = as.numeric(place_overall)
+    )
+
+```
+
+From here with the cleaned up variables, we filtered the data set to just show the overall winners.
+
+```{r}
+
+plotly_win_df %>% 
+  filter(overall == 1) %>% 
+  plot_ly(x = ~year, y = ~format(official_time, "%H:%M:%OS"), 
+          mode = 'lines', type = 'scatter',
+          name = 'Boston Winners',
+          hoverinfo = "text",
+          text = 
+            ~paste0("Name: ", display_name,
+                    "\n", "Year: ", year,
+            "\n", "Time: ", format(official_time, "%H:%M:%OS"),
+            "\n", "Pace: ", format(pace, "%H:%M:%OS"))) %>% 
+  layout(
+    title = "Boston Marathon Winners by Year",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Official Time"))
+
+
+```
+
+This plot shows that over time, the Boston marathon winners are getting faster. There also seems to be some data that was recorded incorectly. Jim Knaub and Franz Nietlispach are reported as having an official time of 1:22:17 and 1:25:59 but the fastest marathon ever run is 1:59 (though not recorded officially, https://www.nytimes.com/2019/10/12/sports/eliud-kipchoge-marathon-record.html)
+
+The fastest time ever run (excluding the sub two hour times) for the Boston Marathon was run by Martin E Duffy in 1975, with a time of 2:04:54. 
+
+## Comparing male and female winners
+
+We can also compare the winners over time by binary gender:
+
+```{r, warnings = FALSE}
+plotly_win_df %>% 
+  filter(gender_result == 1) %>% 
+  mutate(
+    gender = na_if(gender, "U"),
+    gender = as.factor(gender), 
+    gender = recode(gender, "F" = "Female", "M" = "Male")) %>% 
+  group_by(gender) %>% 
+  plot_ly(x = ~year, y = ~format(official_time, "%H:%M:%OS"), 
+          color = ~gender,
+          mode = 'lines', type = 'scatter',
+          hoverinfo = "text",
+          text = 
+            ~paste0("Name: ", display_name,
+                    "\n", "Year: ", year,
+            "\n", "Time: ", format(official_time, "%H:%M:%OS"),
+            "\n", "Pace: ", format(pace, "%H:%M:%OS"))) %>% 
+  layout(
+    title = "Boston Marathon Winners by Year and Binary Gender",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Official Time"))
+```
+
+We can see that male and females winners seem to be following the same general trend of decreasing marathon winning times over the year, but that trend is much more pronounced in males than among females. We can also see when the Boston Marathon allowed women to compete in 1972, and that the first ever female winner was Nina Kuscsik, with a time of 3:10:26. The data from 1993 and 1995 seems to have errors, just as the men's times. This data set shows that Jean Driscoll was the female winner for both years with times of 1:34:50 and 1:40:42. The current world record  holder for the fastest female marathon ran is Brigid Kosgei who ran it in 2:14:04 in 2019 (https://www.worldathletics.org/records/by-discipline/road-running/marathon/outdoor/women).
+
+
+## How do the Boston Marathon winners compare to the record marathon time for the same year? 
+
+
+To compare the Boston Marathon with the record marathon times, we found a table from www.topendsports.com where they recorded the fastest marathon time for that year starting from 1908 to 2018 (though not every year is included). 
+
+
+The plot shows the dramatic decrease in fastest recorded marathon times over the years. In 1908 the fastest recorded time was run by Johnny Hayes in the London Marathon in 2:55:18, compared to the current record holder, Eliud Kipchoge, running the 2:01:39 in the Berlin Marathon in 2018. 
+
+
+```{r}
+
+records_html = 
+  read_html("https://www.topendsports.com/sport/athletics/record-marathon.htm")
+
+
+record_marathon =
+  records_html %>% 
+  html_nodes("table") %>% 
+  html_table(fill = T) %>% 
+  lapply(., function(x) setNames(x, c("time", "date", "athlete", "country", "marathon"))) 
+
+marathon_records = 
+record_marathon %>% 
+  as.data.frame() %>% 
+  mutate(
+    time = as.POSIXct(time, format = "%H:%M:%OS"),
+  ) %>% 
+  separate(date, into = c("month", "day", "year")) %>% 
+    mutate(year = as.numeric(year)) %>% 
+    select(-month, -day)
+
+
+marathon_records %>% 
+  plot_ly(
+    x = ~year, y = ~format(time, "%H:%M:%OS"),
+    mode = 'lines', type = 'scatter',
+    name = "Marathon Record Times",
+    hoverinfo = "text", text = ~paste0(
+        "Name: ", athlete, 
+        "\n", "Year: ", year,
+        "\n", "Time: ", format(time, "%H:%M:%OS"),
+        "\n", "Marathon: ", marathon)) %>% 
+  layout(
+    title = "Record Marathon Times by Year",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Official Time")) 
+  
+```
+
+# CLAIRE
+
+## Prepare Age Data For Plots
+
+```{r}
+boston_df_age =
+  boston_df %>% 
+  select(age) %>%
+  drop_na(age)
+```
+
+## Age Distribution of Participants in Counts 
+
+```{r}
+age_plotly = 
+  boston_df_age %>% 
+  count(age) %>%
+  plot_ly(
+      x = ~age, y = ~n, color = ~age,
+      type = "bar", colors = "viridis") %>%
+  layout(
+    xaxis = list(title = "Age"),
+    yaxis = list(title = "Number of Participants"))
+
+age_plotly 
+```
+
+To create a bar chart of the age distribution for the Boston Marathon from 1900-2019, we began by selecting the age variable and dropping missing age values. Then, we used plotly to create an interactive plot that shows the age and the number of participants at each age year. Additionally, there is an option to hover over each bar within the chart to see the exact age and number of participants at that age.
+
+We notice that the majority of participants in the Boston marathon from 1900-2019 are 35-50 years old, with the most common age being 40. Approximately 21,000 of our 404,727 participants are 40 years old. We also notice that at 5 year age increments, from 40 to 60 years old, ie. 45, 50, 55, there appears to be a higher number of participants compared with the directly surrounding age years. 
+
+## Age Distribution of Participants in Percent
+
+```{r}
+age_percentage_ggplot = 
+  ggplot(boston_df_age, 
+       aes(x = age, 
+           y = ..count.. / sum(..count..))) +
+  geom_histogram(fill = "cornflowerblue", 
+                 color = "white", 
+                 binwidth = 10) + 
+  labs(title = "Percent of Participants in 10-yr Intervals", 
+       y = "Percent",
+       x = "Age") + 
+  scale_x_continuous(breaks = seq(5, 85, by = 10)) + 
+  scale_y_continuous(labels = percent)
+
+age_percentage_ggplot
+```
+
+This histogram shows the age distribution of participants in %'s of total participants in 10 year segments. We see that in the age range of 35-45, there is the highest percentage of participants, approximately 33%.  
+
+## Prepare Gender Data For Plots
+
+```{r}
+boston_df_gender =
+    boston_df %>%
+    select(gender) %>%
+    mutate(gender = na_if(gender, "U"), 
+            gender = recode(gender, m = "M"),
+           gender = factor(gender, levels = c("M", "F"), labels = c("male", "female"))) %>% 
+  drop_na(gender) %>% 
+  count(gender)
+```
+
+## Participants By Gender Plot (%'s)
+
+```{r}
+gender_bar_graph = boston_df_gender %>%
+  mutate(pct = (n / sum(n)),
+         pctlabel = paste0(round(pct*100), "%")
+  )
+
+ggplot(gender_bar_graph, 
+       aes(x = reorder(gender, -pct),
+           y = pct, fill = gender)) + 
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = pctlabel), 
+            vjust = -0.25) +
+  scale_y_continuous(labels = percent) +
+  labs(x = "Gender", 
+       y = "Percent", 
+       title  = "Percent of participants by gender")
+```
+
+To create a bar chart for gender distribution, we selected the gender variable, dropped missing values, created a new variable to find the percent of the total that lie within each gender category, by computing n/sum(n), then created a variable that converts the pct variable into a percentage to utilize in the plot. 
+
+The graph shows that from 1900-2019, approximately 66% of Marathon participants were male and 34% of Marathon runners were female. There is a large discrepancy between genders. 
+
+## Prepare Gender Count Change Over Time Data
+
+```{r}
+gender_timeplot_df =
+    boston_df %>%
+    select(year, gender) %>%
+    mutate(gender = na_if(gender, "U"), 
+            gender = recode(gender, m = "M"),
+           gender = factor(gender, levels = c("M", "F"), labels = c("male", "female"))) %>% 
+  drop_na(gender) %>%
+  drop_na(year) %>%
+  group_by(year, gender) %>%
+  count()
+```
+
+## Gender Count over Time
+
+```{r}
+gender_timeplot =
+ggplot(gender_timeplot_df, aes(x = year, y = n)) + 
+  geom_line(aes(color = gender), size = 1) + xlim(1900, 2019) + labs(x = "Year", 
+       y = "Participants", 
+       title  = "Number of participants over time by gender")
+
+ggplotly(gender_timeplot)
+```
+
+
+We may wonder if the number of participants in each category has changed over time, and if so by how much? To determine how the distribution of male and female participants has changed over time. We grouped by year and gender, then used counts to determine the number of participants at each year for each gender. Using plotly, you can hover over to see each year, number of participants, and the gender.
+
+The plot reveals that female participation did not begin until ~1972, while male participation began in 1900 - according to our dataset. While there has been an increase in female runners, there is still approximately a ~2,500 participant discrepancy between gender participation. Also of interest is that the graph shows that in 1996, there was a steep increase in participants among both males and females, and this is likely because this was the 100th anniversary of the race.
+
+
+## Prepare Country Data Over Time for Plot
+
+```{r}
+country_overtime_df = 
+  boston_df %>% 
+  select(country_residence, year) %>%
+  drop_na(country_residence) %>%
+  group_by(year, country_residence) %>%
+  count() %>%
+  filter(n > 200)
+```
+
+## Popular Country Participation Over Time Plot
+
+```{r}
+countries_plot =
+ggplot(country_overtime_df, aes(x = year, y = n)) + 
+  geom_line(aes(color = country_residence), size = 1) + labs(x = "Year", 
+       y = "Number of Participants", 
+       title  = "Number of Participants over Time by Country") + theme(legend.position = "bottom")
+
+ggplotly(countries_plot)
+```
+
+Then, we assessed which countries Marathon participants reside in, specifically  and how the distribution of these has changed over time. To do this, we first cleaned the data by grouping by country and year variables, and then finding the counts based on this grouping. We filtered to the most popular countries by only including those with 200 participants each year, as numerous countries were represented in our dataset. 
+
+The plot shows that there a significantly more U.S. participants than other countries, although the number of participants from the U.S. appears to be decreasing from 2015 to 2016. The second most popular country is Canada, which also appears to be decreasing over time.
+
+## Popular Country Participation Over Time Plot
+
+```{r}
+country_overtime_df2 = 
+  country_overtime_df %>%
+  filter(country_residence != "United States")
+```
+
+## Popular Country Participation Over Time Plot Excluding U.S.
+
+```{r}
+countries_plot2 =
+ggplot(country_overtime_df2, aes(x = year, y = n)) + 
+  geom_line(aes(color = country_residence), size = 1) + labs(x = "Year", 
+       y = "Number of Participants", 
+       title  = "Number of Participants over Time by Country") + theme(legend.position = "bottom")
+
+ggplotly(countries_plot2)
+```
+
+
+## Prepare Country Participation Over Time Data for Plots
+
+```{r}
+country_counts_df = 
+boston_df %>% 
+  select(country_residence) %>% 
+  drop_na(country_residence) %>% 
+  group_by(country_residence) %>%
+  count() %>%
+  filter(n > 500) 
+```
+
+## Country Participation Overall
+
+```{r}
+popular_country_US = 
+ country_counts_df %>% 
+ plot_ly(
+      x = ~country_residence, y = ~n, color = ~country_residence,
+      type = "bar", colors = "viridis") %>% 
+  layout(
+    xaxis = list(title = "Country"),
+    yaxis = list(title = "Number of Participants"))
+    
+popular_country_US
+```
+
+## Country Participation Overall Excluding U.S.
+
+```{r}
+popular_country_noUS = 
+  country_counts_df %>% 
+  filter(country_residence != "United States") %>%
+  plot_ly(
+      x = ~country_residence, y = ~n, color = ~country_residence,
+      type = "bar", colors = "viridis") %>% 
+  layout(
+    xaxis = list(title = "Country"),
+    yaxis = list(title = "Number of Participants"))
+
+popular_country_noUS
+```
+
+## Country Participation Overall Excluding U.S. and Canada
+
+```{r}
+popular_country_others = 
+ country_counts_df %>% 
+  filter(country_residence != "United States") %>%
+  filter(country_residence != "Canada") %>%
+ plot_ly(
+      x = ~country_residence, y = ~n, color = ~country_residence,
+      type = "bar", colors = "viridis") %>% 
+  layout(
+    xaxis = list(title = "Age"),
+    yaxis = list(title = "Number of Participants"))
+
+popular_country_others
+```
+
+To look at overall participation across countries, we first cleaned by finding the count of each country among participants. We focused on countries with greater than 500 participants from 1900-2019 in the Marathon. We then created plots to assess the most popular countries, and then excluded the U.S., then excluded Canada to see a full picture of where participants are from. 
+
+The plot reveals, unsurprisingly, that a majority of marathon particpants are from the U.S., and many are from Canada as well. After that, there are many countries which have similar levels of participation. We may wonder whether participation is likely associated with distance from country, and those countries that are more likely to participate are closer in proximity. The plot shows, though, that there are many participants from countries very far away, such as Australia and China. 
+
+# SYDNEY
+
+
+
+
+

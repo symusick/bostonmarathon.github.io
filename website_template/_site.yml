@@ -6,14 +6,25 @@ navbar:
     - text: "Report"
       href: report.html
     - text: "Visualizations"
-      href: visualizations.html
+      menu:
+      - text: "Demographics"
+        href: demo.html
+      - text: "Geographic Exploration"
+        href: geo.html
+      - text: "Weather Exploration"
+        href: weather.html
+      - text: "Winning Time Trends"
+        href: time.html
     - text: "Analysis"
       href: analysis.html
-    - icon: fa-envelope fa-lg
-      href: mailto:sm4993@cumc.columbia.edu
+    - text: "Authors"
+      href: authors.html
+    - text: "<3"
+      href: heart.html
     - icon: fa-github fa-lg
       href: http://github.com/symusick/
 output:
   html_document:
+    code_folding: hide
     theme: yeti
 

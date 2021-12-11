@@ -1,0 +1,58 @@
+---
+title: "Authors"
+output: html_document
+---
+
+<br>
+<br>
+
+## Hugo Wang
+* UNI:
+* Department: 
+* Certificate:
+* Research Interests: 
+* Fun Fact: 
+
+<br>
+<br>
+<img src="suhani.png" alt="Avatar" class="avatar" style="width:25%">
+
+## Suhani Patel
+* UNI: sp3903
+* Department: Epidemiology
+* Certificate: Applied Biostatistics
+* Research Interests: Infectious disease control
+* Fun Fact: Professional crocheter
+
+<br>
+<br>
+<img src="tamaraC.png" alt="Avatar" class="avatar" style="width:25%">
+
+## Tamara Hofer
+* UNI: th2891
+* Department: Epidemiology
+* Certificate: Epidemiology of Chronic Disease
+* Research Interests: Mental health in substance use in refugee and forced migrant populations
+* Fun Fact: Briefly worked on a farm in Georgia growing all kinds of fruits and vegetables and now can't   keep houseplants alive in her apartment
+
+<br>
+<br>
+<img src="claireC.png" alt="Avatar" class="avatar" style="width:25%">
+
+## Claire Mobley
+* UNI: cm4070
+* Department: Epidemiology
+* Certificate: Comparative Effectiveness and Outcomes Research
+* Research Interests: Relationship between diet, and other modifiable risk factors, and cancer as well as   cost-effectiveness analyses of chronic disease therapies
+* Fun Fact: Oddly good at telling when people get haircuts (even people she doesn’t know well)
+
+<br>
+<br>
+<img src="sydneyC.png" alt="Avatar" class="avatar" style="width:25%">
+
+## Sydney Musick
+* UNI: sm4993
+* Department: Epidemiology
+* Certificate: Applied Biostatistics 
+* Research Interests: Lifecourse injury and violence epidemiology
+* Fun Fact: Can guess the bad guy in any mystery/crime show
