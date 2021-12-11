@@ -2,20 +2,340 @@
 title: "Runner Demographics"
 ---
 
-## Prepare Age Data For Plots
-
-```{r}
+```{r include=FALSE, warning=FALSE}
+## Packages
+library(tidyverse)
 library(dplyr)
+library(viridis)
+library(ggridges)
+library(patchwork)
+library(readxl)
+library(leaflet)
+library(plotly)
+library(scales)
+library(ggplot2)
+library(httr)
+library(rvest)
 
+## Data Importing and Cleaning  
+years_1 <- c(1900:2012, 2014)
+years_2 <- c(2015:2019)
+importing_data = function(x){
+ 
+  if(str_detect(x, str_c(years_1, collapse = "|"))) {
+  read_csv(x, na = c("NULL", "", "0"), col_types = "cicccciiiicc") 
+  } 
+  
+  else if(str_detect(x, str_c(years_2, collapse = "|"))){
+    read_csv(x, na = c("NULL", "", "0"), col_types = "cccicccccccccccccccccciiiiccc")
+  }
+}
+
+boston_df <- 
+  tibble(list.files("data", full.names = TRUE)) %>% 
+  setNames("file_name") %>% 
+  mutate(data = map(file_name, importing_data)) %>% 
+  unnest(data) %>% 
+  mutate(year = readr::parse_number(file_name),
+        city = coalesce(city, residence),
+        display_name = str_replace_all(display_name, "[^a-zA-Z0-9]", " ")) %>% 
+  mutate(country_residence = replace(country_residence, country_residence == "AHO", "Netherland Antilles")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ALB", "Albania")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ALG", "Algeria")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "AND", "Andorra")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ARG", "Argentina")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Argenti", "Argentina")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "AUS", "Australia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Austral", "Australia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "AUT", "Austria")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BAH", "Bahamas")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BAR", "Barbados")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Barbado", "Barbados")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BDI", "Burundi")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BLR", "Belarus")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BEL", "Belgium")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BER", "Bermuda")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BRA", "Brazil")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BRN", "Brunei")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "BUL", "Bulgaria")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CAN", "Canada")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CAY", "Cayman")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CHI", "Chile")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CHN", "China")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "COL", "Colombia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Colombi", "Colombia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CRC", "Costa Rica")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Costa R", "Costa Rica")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CRO", "Croatia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CYP", "Cyprus")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "CZE", "Czech Republic")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Czech R", "Czech Republic")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "DEN", "Denmark")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "DOM", "Dominican Republic")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Dominic", "Dominican Republic")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ECU", "Ecuador")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "EGY", "Egypt")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "El Salv", "El Salvador")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ESA", "El Salvador")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ESP", "Spain")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "EST", "Estonia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ETH", "Ethiopia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Ethiopi", "Ethiopia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Faroe I", "Faroe Islands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "FIN", "Finland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "FLK", "Falkland Islands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "FRA", "France")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GBR", "England")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GER", "Germany")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GRE", "Greece")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GRN", "Greenland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "GUA", "Guatemala")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Guatema", "Guatemala")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "HKG", "Hong Kong")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Hong Ko", "Hong Kong")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "HON", "Honduras")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Hondura", "Honduras")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "HUN", "Hungary")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "INA", "Indonesia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Indones", "Indonesia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "IND", "India")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "IRL", "Ireland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ISL", "Iceland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ISR", "Israel")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ITA", "Italy")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "JAM", "Jamaica")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "JPN", "Japan")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "JOR", "Jordan")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "KEN", "Kenya")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "KOR", "Korea")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Korea,", "Korea")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "KSA", "Saudi Arabia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "KUW", "Kuwait")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "LAT", "Latvia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "LIE", "Liechtenstein")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Liechte", "Liechtenstein")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Lithuan", "Lithuania")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "LTU", "Lithuania")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "LUX", "Luxembourg")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Luxembo", "Luxembourg")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Macao S", "Macao")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Macedon", "Macedonia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Malaysi", "Malaysia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MAR", "Martinique")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Martini", "Martinique")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MAS", "Malaysia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MEX", "Mexico")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MGL", "Mongolia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "MLT", "Malta")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NCA", "Nicaragua")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NED", "Netherlands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Netherl", "Netherlands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "New Zea", "New Zealand")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NGR", "Nigeria")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NOR", "Norway")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "NZL", "New Zealand")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "OMA", "Oman")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PAK", "Pakistan")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Palesti", "Palestine")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PAN", "Panama")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PAR", "Paraguay")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Paragua", "Paraguay")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PER", "Peru")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "PHI", "Philippines")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Philipp", "Philippines")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "POL", "Poland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "POR", "Portugal")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Portuga", "Portugal")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Puerto", "Puerto Rico")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "QAT", "Qatar")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ROU", "Romania")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Saudi A", "Saudi Arabia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SIN", "Singapore")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Singapo", "Singapore")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SLO", "Slovenia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Slovaki", "Slovakia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Sloveni", "Slovenia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SMR", "San Marino")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "South A", "South Africa")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SRB", "Serbia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Sri Lan", "Sri Lanka")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SUI", "Switzerland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SVK", "Slovakia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "SWE", "Sweden")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Switzer", "Switzerland")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TCA", "Turks and Caicos")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "THA", "Thailand")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Thailan", "Thailand")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TPE", "Taipei")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TRI", "Trinidad")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Trinida", "Trinidad")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TUR", "Turkey")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "TWN", "Taiwan")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "UAE", "United Arab Emirates")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "UGA", "Uganda")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "UKR", "Ukraine")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "United", "United States")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "URU", "Uruguay")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "USA", "United States")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "VEN", "Venezuela")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Venezue", "Venezuela")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "VGB", "Virgin Islands")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "VIE", "Vietnam")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "ZIM", "Zimbabwe")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "RSA", "South Africa")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "RUS", "Russia")) %>%
+  mutate(country_residence = replace(country_residence, country_residence == "Russian", "Russia")) %>%
+  filter(!is.na(display_name)) %>% 
+  select(-file_name, -residence, -first_name, -last_name) %>% 
+  rename("country_citizenship" = "contry_citizenship" )
+
+## Continent categorization
+boston_df$continent[boston_df$country_residence %in% c(
+  "Australia", 
+  "New Zealand"
+  )] <- "Australia"
+boston_df$continent[boston_df$country_residence %in% c(
+  "Algeria",
+  "Burundi",
+  "Egypt",
+  "Ethiopia",
+  "Kenya",  
+  "Morocco", 
+  "Nigeria,",  
+  "South Africa", 
+  "Uganda",
+  "Zimbabwe"
+  )] <- "Africa"
+boston_df$continent[boston_df$country_residence %in% c(
+ "China", 
+  "Hong Kong", 
+  "India",            
+  "Indonesia",
+  "Israel",  
+  "Japan",               
+  "Jordan", 
+  "Korea",   
+  "Malaysia",
+  "Mongolia",              
+  "Nepal",  
+  "Oman", 
+  "Pakistan",            
+  "Palestine", 
+  "Philippines", 
+  "Qatar",   
+  "Russia", 
+  "Saudi Arabia",
+  "Singapore",  
+  "Sri Lanka",  
+  "Taipei",               
+  "Taiwan",            
+  "Thailand",  
+  "Vietnam", 
+  "Brunei", 
+  "Kuwait",                         
+  "Macao",
+  "United Arab Emirates"                                  
+  )] <- "Asia"
+boston_df$continent[boston_df$country_residence %in% c(
+  "Canada",  
+  "Mexico", 
+  "Puerto Rico",
+  "United States",
+  "Bahamas",                        
+  "Barbados",
+  "Belize",              
+  "Bermuda", 
+  "Cayman",                
+  "Dominican Republic",  
+  "Jamaica", 
+  "Martinique",
+  "Virgin Islands"                                                           
+  )] <- "North America"
+boston_df$continent[boston_df$country_residence %in% c(
+  "Argentina", 
+  "Bolivia",                
+  "Brazil", 
+  "Chile", 
+  "Colombia",           
+  "Costa Rica",  
+  "Ecuador",  
+  "El Salvador", 
+  "Guatemala",             
+  "Honduras", 
+  "Nicaragua",  
+  "Panama",             
+  "Paraguay", 
+  "Peru",  
+  "Uruguay",            
+  "Venezuela",
+  "Aruba",
+  "Falkland Island",
+  "Trinidad"
+  )] <- "South America"
+boston_df$continent[boston_df$country_residence %in% c(
+  "Albania", 
+  "Andorra",            
+  "Armenia",
+  "Austria",
+  "Bahrain",
+  "Belarus",
+  "Belgium",  
+  "Bulgaria", 
+  "Croatia", 
+  "Cyprus",       
+  "Czech Republic",              
+  "Denmark",   
+  "England", 
+  "Finland",               
+  "France",              
+  "Germany",               
+  "Greece", 
+  "Greenland", 
+  "Hungary",              
+  "Iceland",
+  "Ireland",                             
+  "Italy", 
+  "Latvia",        
+  "Liechtenstein",            
+  "Lithuania", 
+  "Luxembourg", 
+  "Netherland Antilles",          
+  "Netherlands", 
+  "Norway",    
+  "Poland",             
+  "Portugal", 
+  "Romania",
+  "Serbia",              
+  "Slovakia",             
+  "Slovenia",
+  "Spain",            
+  "Sweden",          
+  "Switzerland", 
+  "Turkey",     
+  "Turks and Caicos",
+  "Ukraine",
+  "Bosnia", 
+  "Estonia",                
+  "Faroe Islands", 
+  "Macedonia",             
+  "Malta",     
+  "Moldova",               
+  "Monaco", 
+  "San Marino"  
+  )] <- "Europe"
+```
+
+
+```{r warning=FALSE}
+## Prepare Age Data For Plots
 boston_df_age =
   boston_df %>% 
   select(age) %>%
-  mutate(drop_na(age))
+  drop_na(age)
 ```
 
 ## Age Distribution of Participants in Counts 
-
-```{r}
+```{r warning=FALSE}
 age_plotly = 
   boston_df_age %>% 
   count(age) %>%
@@ -33,14 +353,15 @@ To create a bar chart of the age distribution for the Boston Marathon from 1900-
 
 We notice that the majority of participants in the Boston marathon from 1900-2019 are 35-50 years old, with the most common age being 40. Approximately 21,000 of our 404,727 participants are 40 years old. We also notice that at 5 year age increments, from 40 to 60 years old, ie. 45, 50, 55, there appears to be a higher number of participants compared with the directly surrounding age years. 
 
-## Age Distribution of Participants in Percent
+<br>
 
+## Age Distribution of Participants in Percent
 ```{r}
 age_percentage_ggplot = 
   ggplot(boston_df_age, 
        aes(x = age, 
            y = ..count.. / sum(..count..))) +
-  geom_histogram(fill = "cornflowerblue", 
+  geom_histogram(fill = "turquoise4", 
                  color = "white", 
                  binwidth = 10) + 
   labs(title = "Percent of Participants in 10-yr Intervals", 
@@ -54,9 +375,9 @@ age_percentage_ggplot
 
 This histogram shows the age distribution of participants in %'s of total participants in 10 year segments. We see that in the age range of 35-45, there is the highest percentage of participants, approximately 33%.  
 
-## Prepare Gender Data For Plots
 
 ```{r}
+## Prepare Gender Data For Plots
 boston_df_gender =
     boston_df %>%
     select(gender) %>%
@@ -68,7 +389,6 @@ boston_df_gender =
 ```
 
 ## Participants By Gender Plot (%'s)
-
 ```{r}
 gender_bar_graph = boston_df_gender %>%
   mutate(pct = (n / sum(n)),
@@ -78,6 +398,7 @@ gender_bar_graph = boston_df_gender %>%
 ggplot(gender_bar_graph, 
        aes(x = reorder(gender, -pct),
            y = pct, fill = gender)) + 
+  scale_fill_manual(values=c("darkslateblue","turquoise4")) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = pctlabel), 
             vjust = -0.25) +
@@ -91,9 +412,9 @@ To create a bar chart for gender distribution, we selected the gender variable, 
 
 The graph shows that from 1900-2019, approximately 66% of Marathon participants were male and 34% of Marathon runners were female. There is a large discrepancy between genders. 
 
-## Prepare Gender Count Change Over Time Data
 
 ```{r}
+## Prepare Gender Count Change Over Time Data
 gender_timeplot_df =
     boston_df %>%
     select(year, gender) %>%
@@ -107,11 +428,12 @@ gender_timeplot_df =
 ```
 
 ## Gender Count over Time
-
 ```{r}
 gender_timeplot =
 ggplot(gender_timeplot_df, aes(x = year, y = n)) + 
-  geom_line(aes(color = gender), size = 1) + xlim(1900, 2019) + labs(x = "Year", 
+  geom_line(aes(color = gender), size = 1) + xlim(1900, 2019) + 
+  scale_color_manual(values=c("darkslateblue","turquoise4")) +
+  labs(x = "Year", 
        y = "Participants", 
        title  = "Number of participants over time by gender")
 
@@ -124,9 +446,8 @@ We may wonder if the number of participants in each category has changed over ti
 The plot reveals that female participation did not begin until ~1972, while male participation began in 1900 - according to our dataset. While there has been an increase in female runners, there is still approximately a ~2,500 participant discrepancy between gender participation. Also of interest is that the graph shows that in 1996, there was a steep increase in participants among both males and females, and this is likely because this was the 100th anniversary of the race.
 
 
-## Prepare Country Data Over Time for Plot
-
 ```{r}
+## Prepare Country Data Over Time for Plot
 country_overtime_df = 
   boston_df %>% 
   select(country_residence, year) %>%
@@ -137,7 +458,6 @@ country_overtime_df =
 ```
 
 ## Popular Country Participation Over Time Plot
-
 ```{r}
 countries_plot =
 ggplot(country_overtime_df, aes(x = year, y = n)) + 
@@ -153,7 +473,6 @@ Then, we assessed which countries Marathon participants reside in, specifically 
 The plot shows that there a significantly more U.S. participants than other countries, although the number of participants from the U.S. appears to be decreasing from 2015 to 2016. The second most popular country is Canada, which also appears to be decreasing over time.
 
 ## Popular Country Participation Over Time Plot
-
 ```{r}
 country_overtime_df2 = 
   country_overtime_df %>%
@@ -161,7 +480,6 @@ country_overtime_df2 =
 ```
 
 ## Popular Country Participation Over Time Plot Excluding U.S.
-
 ```{r}
 countries_plot2 =
 ggplot(country_overtime_df2, aes(x = year, y = n)) + 
@@ -173,9 +491,8 @@ ggplotly(countries_plot2)
 ```
 
 
-## Prepare Country Participation Over Time Data for Plots
-
 ```{r}
+## Prepare Country Participation Over Time Data for Plots
 country_counts_df = 
 boston_df %>% 
   select(country_residence) %>% 
@@ -186,7 +503,6 @@ boston_df %>%
 ```
 
 ## Country Participation Overall
-
 ```{r}
 popular_country_US = 
  country_counts_df %>% 
@@ -201,7 +517,6 @@ popular_country_US
 ```
 
 ## Country Participation Overall Excluding U.S.
-
 ```{r}
 popular_country_noUS = 
   country_counts_df %>% 
@@ -217,7 +532,6 @@ popular_country_noUS
 ```
 
 ## Country Participation Overall Excluding U.S. and Canada
-
 ```{r}
 popular_country_others = 
  country_counts_df %>% 
@@ -227,7 +541,7 @@ popular_country_others =
       x = ~country_residence, y = ~n, color = ~country_residence,
       type = "bar", colors = "viridis") %>% 
   layout(
-    xaxis = list(title = "Age"),
+    xaxis = list(title = "Country"),
     yaxis = list(title = "Number of Participants"))
 
 popular_country_others
