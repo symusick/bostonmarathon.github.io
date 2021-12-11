@@ -334,7 +334,7 @@ boston_df_age =
   drop_na(age)
 ```
 
-## Age Distribution of Participants in Counts 
+# Age Distribution of Participants in Counts 
 ```{r warning=FALSE}
 age_plotly = 
   boston_df_age %>% 
@@ -355,7 +355,7 @@ We notice that the majority of participants in the Boston marathon from 1900-201
 
 <br>
 
-## Age Distribution of Participants in Percent
+# Age Distribution of Participants in Percent
 ```{r}
 age_percentage_ggplot = 
   ggplot(boston_df_age, 
@@ -388,7 +388,7 @@ boston_df_gender =
   count(gender)
 ```
 
-## Participants By Gender Plot (%'s)
+# Participants By Gender Plot (%'s)
 ```{r}
 gender_bar_graph = boston_df_gender %>%
   mutate(pct = (n / sum(n)),
@@ -427,7 +427,7 @@ gender_timeplot_df =
   count()
 ```
 
-## Gender Count over Time
+# Gender Count over Time
 ```{r}
 gender_timeplot =
 ggplot(gender_timeplot_df, aes(x = year, y = n)) + 
@@ -457,7 +457,7 @@ country_overtime_df =
   filter(n > 200)
 ```
 
-## Popular Country Participation Over Time Plot
+# Popular Country Participation Over Time Plot
 ```{r}
 countries_plot =
 ggplot(country_overtime_df, aes(x = year, y = n)) + 
@@ -472,14 +472,14 @@ Then, we assessed which countries Marathon participants reside in, specifically 
 
 The plot shows that there a significantly more U.S. participants than other countries, although the number of participants from the U.S. appears to be decreasing from 2015 to 2016. The second most popular country is Canada, which also appears to be decreasing over time.
 
-## Popular Country Participation Over Time Plot
+# Popular Country Participation Over Time Plot
 ```{r}
 country_overtime_df2 = 
   country_overtime_df %>%
   filter(country_residence != "United States")
 ```
 
-## Popular Country Participation Over Time Plot Excluding U.S.
+# Popular Country Participation Over Time Plot Excluding U.S.
 ```{r}
 countries_plot2 =
 ggplot(country_overtime_df2, aes(x = year, y = n)) + 
@@ -502,7 +502,7 @@ boston_df %>%
   filter(n > 500) 
 ```
 
-## Country Participation Overall
+# Country Participation Overall
 ```{r}
 popular_country_US = 
  country_counts_df %>% 
@@ -516,7 +516,7 @@ popular_country_US =
 popular_country_US
 ```
 
-## Country Participation Overall Excluding U.S.
+# Country Participation Overall Excluding U.S.
 ```{r}
 popular_country_noUS = 
   country_counts_df %>% 
@@ -531,7 +531,7 @@ popular_country_noUS =
 popular_country_noUS
 ```
 
-## Country Participation Overall Excluding U.S. and Canada
+# Country Participation Overall Excluding U.S. and Canada
 ```{r}
 popular_country_others = 
  country_counts_df %>% 

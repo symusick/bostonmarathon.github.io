@@ -9,12 +9,12 @@ navbar:
       menu:
       - text: "Demographics"
         href: demo.html
+      - text: "Winning Time Trends"
+        href: time.html
       - text: "Geographic Exploration"
         href: geo.html
       - text: "Weather Exploration"
         href: weather.html
-      - text: "Winning Time Trends"
-        href: time.html
     - text: "Analysis"
       href: analysis.html
     - text: "Authors"
