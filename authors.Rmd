@@ -5,13 +5,14 @@ output: html_document
 
 <br>
 <br>
+<img src="hugoC.png" alt="Avatar" class="avatar" style="width:25%">
 
 ## Hugo Wang
-* UNI:
-* Department: 
-* Certificate:
-* Research Interests: 
-* Fun Fact: 
+* UNI: xw2757
+* Department: Health Policy and Management
+* Certificate: Applied Biostatistics
+* Research Interests: Clinical quality and implementation research
+* Fun Fact: He has two cats named Aristotle and Marcus Aurelius
 
 <br>
 <br>
