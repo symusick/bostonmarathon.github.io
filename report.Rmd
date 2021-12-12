@@ -1,10 +1,13 @@
 ---
 title: "Project Report"
+author: "Suhani Patel, Tamara Hofer, Hugo Wang, Claire Mobley, Sydney Musick"
 ---
+
+<br>
 
 ## Introduction
 
-### Assessing the Boston Marathon’s participants and champions
+#### Assessing the Boston Marathon’s participants and champions
 
 A project exploring the demographics of Boston’s Marathon participants, trends over time starting from the 1900’s, and the variables associated with winning the marathon. 
 
@@ -12,12 +15,23 @@ A project exploring the demographics of Boston’s Marathon participants, trends
 
 ## Project Overview 
 
-### Motivation: Provide an overview of the project goals and motivation.
+#### Motivation: Provide an overview of the project goals and motivation.
 
 According to Running USA National Runner Survey, six in ten runners are women and half of runners are ages 35 to 54 with an average of 40 years old. As well, runners in the 30- to 50-year-old age group are the fastest. The overall goal of our project is to analyze the demographics of participants and winners of the Boston Marathon specifically from 1900-2019 to uncover trends within these variables over time. We will begin by analyzing the overall demographics of those who participated in the Boston Marathon from 1900-2019, by looking at variables such as: age, gender, state, and country of residence. We are also interested in the same demographic variables of the winners of the Marathon each year. Additionally, we will run statistical analysis to see what variables are associated with the fastest running times. Upon further research, we found that weather is a major factor in run times and added this to our analysis. 
 
 * [Marathon statistics](https://www.livestrong.com/article/13763749-marathon-statistics/)
 * [Demographic trends](https://www.26-2.org/marathon-center/demographics-trends/)
+
+## Project Inspiration  
+
+#### Related work: Anything that inspired you, such as a paper, a web site, or something we discussed in class.
+
+We were inspired to investigate this research question because the timing of our project aligned with New York City’s Marathon on November 7th, 2021. 
+
+While watching the marathon, we wondered: what are the demographics of the marathon runners, are those who win similar in some way over time, and is a particular variable(s) associated with a faster overall running time? 
+
+We found initial New York City Data Marathon information from the 2021 race [here](https://nycdatascience.com/blog/student-works/the-demographics-of-the-top-2600-finishers-at-the-2018-nyc-marathon/). Because information on each runner was on hundreds of individualized pages, the data scraping process was challenging. Additionally, we were hoping to assess data on the race over time and not simply from the 2021 race. Due to both these reasons, we decided to assess the Boston Marathon because we were able to procure a large dataset with participant data dating back to the 1800’s. Furthermore, the Boston Marathon is iconic because it is the world’s oldest annual marathon dating back to 1897.
+
 
 
 

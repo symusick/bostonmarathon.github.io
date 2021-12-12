@@ -2,6 +2,34 @@
 title: "WHO’S BOSTON’S NEXT MARATHON WINNER?!?!"
 ---
 
+<br>
+<center>
 
+<img src="emblem.png" alt="Avatar" class="avatar" style="width:50%">
+
+</center>
+
+<br>
+<br>
+
+### This project is a retrospective look at the Boston Marathon: its runners, its winners, and its weather. 
+
+<br>
+
+Authors: Sydney Musick (sm4993), Suhani Patel (sp3903), Tamara Hofer (th2891), Hugo Wang (xw2757), Claire Mobley (cm4070)
+
+Outline of the project and website:
+<iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay=0; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Project Repo Links:
+
+* [Website Repo](https://github.com/symusick/bostonmarathon.github.io.git)
+* [Working Repo](https://github.com/symusick/p8105_finalproject_marathon.git)
+
+<br>
+<br>
+
+
+###### *Note: We do not intend to predict the next winner of the Boston Marathon with this project. The results might be used to inform speculation, not to predict future winners.
 
 

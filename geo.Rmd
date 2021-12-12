@@ -428,7 +428,7 @@ Africa is the continent with the most winners in the female open division, close
 
 <br>
 
-## Official Times and Country of Residence of Champions by Year in the Open Division
+# Official Times and Country of Residence of Champions by Year in the Open Division
 ```{r warning=FALSE, message=FALSE}
 plot2 = winners_bind %>%
   mutate(text_label = 
