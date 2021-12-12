@@ -314,33 +314,314 @@ $(document).ready(function () {
 
 
 <p><br></p>
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
-<div id="assessing-the-boston-marathons-participants-and-champions" class="section level4">
-<h4>Assessing the Boston Marathon’s participants and champions</h4>
+<div id="introduction" class="section level1">
+<h1><span style="text-decoration:underline">Introduction</span></h1>
+<p><br></p>
+<div id="assessing-the-boston-marathons-participants-and-champions" class="section level3">
+<h3>Assessing the Boston Marathon’s participants and champions</h3>
 <p>A project exploring the demographics of Boston’s Marathon participants, trends over time starting from the 1900’s, and the variables associated with winning the marathon.</p>
+<p><br></p>
 <p><img src="bostonpic.jpeg" alt="Avatar" class="avatar"></p>
+<p><br></p>
 </div>
 </div>
-<div id="project-overview" class="section level2">
-<h2>Project Overview</h2>
-<div id="motivation-provide-an-overview-of-the-project-goals-and-motivation." class="section level4">
-<h4>Motivation: Provide an overview of the project goals and motivation.</h4>
+<div id="project-overview" class="section level1">
+<h1><span style="text-decoration:underline">Project Overview</span></h1>
+<p><br></p>
 <p>According to Running USA National Runner Survey, six in ten runners are women and half of runners are ages 35 to 54 with an average of 40 years old. As well, runners in the 30- to 50-year-old age group are the fastest. The overall goal of our project is to analyze the demographics of participants and winners of the Boston Marathon specifically from 1900-2019 to uncover trends within these variables over time. We will begin by analyzing the overall demographics of those who participated in the Boston Marathon from 1900-2019, by looking at variables such as: age, gender, state, and country of residence. We are also interested in the same demographic variables of the winners of the Marathon each year. Additionally, we will run statistical analysis to see what variables are associated with the fastest running times. Upon further research, we found that weather is a major factor in run times and added this to our analysis.</p>
 <ul>
 <li><a href="https://www.livestrong.com/article/13763749-marathon-statistics/">Marathon statistics</a></li>
 <li><a href="https://www.26-2.org/marathon-center/demographics-trends/">Demographic trends</a></li>
 </ul>
+<p><br> <br></p>
 </div>
-</div>
-<div id="project-inspiration" class="section level2">
-<h2>Project Inspiration</h2>
-<div id="related-work-anything-that-inspired-you-such-as-a-paper-a-web-site-or-something-we-discussed-in-class." class="section level4">
-<h4>Related work: Anything that inspired you, such as a paper, a web site, or something we discussed in class.</h4>
+<div id="project-inspiration" class="section level1">
+<h1><span style="text-decoration:underline">Project Inspiration</span></h1>
+<p><br></p>
 <p>We were inspired to investigate this research question because the timing of our project aligned with New York City’s Marathon on November 7th, 2021.</p>
 <p>While watching the marathon, we wondered: what are the demographics of the marathon runners, are those who win similar in some way over time, and is a particular variable(s) associated with a faster overall running time?</p>
 <p>We found initial New York City Data Marathon information from the 2021 race <a href="https://nycdatascience.com/blog/student-works/the-demographics-of-the-top-2600-finishers-at-the-2018-nyc-marathon/">here</a>. Because information on each runner was on hundreds of individualized pages, the data scraping process was challenging. Additionally, we were hoping to assess data on the race over time and not simply from the 2021 race. Due to both these reasons, we decided to assess the Boston Marathon because we were able to procure a large dataset with participant data dating back to the 1800’s. Furthermore, the Boston Marathon is iconic because it is the world’s oldest annual marathon dating back to 1897.</p>
+<p><br> <br></p>
 </div>
+<div id="methods" class="section level1">
+<h1><span style="text-decoration:underline">Methods</span></h1>
+<p><br></p>
+<div id="goals-research-questions" class="section level2">
+<h2>Goals: Research Questions</h2>
+<p><br></p>
+<div id="research-questions" class="section level3">
+<h3>Research Questions</h3>
+<p>We are trying to answer the following questions through our analysis:</p>
+<ul>
+<li>What are the overall demographics of participants?</li>
+<li>What are the demographics of the winners?</li>
+<li>Are demographics consistent from 1900 - 2018, and between genders? (compare genders- are women getting faster over time, are men?)</li>
+<li>For those years that have 5K marathon times, are these predictors of marathon time?</li>
+<li>Can we predict who will win the next Boston Marathon?</li>
+</ul>
+<p><br></p>
+</div>
+<div id="research-aims" class="section level3">
+<h3>Research Aims</h3>
+<p>Our ultimate goal was to better understand who not only the participants of the Boston Marathon are, but also the champions and how this changed over the past 100 years. We also wanted to understand what characteristics were associated with winning. Analyzing the Boston Marathon over time can ultimately provide insights on who is most likely to be the champion next year.</p>
+<p><br></p>
+</div>
+<div id="how-did-these-questions-changed-over-time" class="section level3">
+<h3>How did these questions changed over time?</h3>
+<p>When assessing the demographics of winners, specifically where the winners were from (country of residence), we came upon data from the wheelchair division of the Boston marathon. We were curious to assess the wheelchair times and geographical data to see how it compared to the men and women’s open division.</p>
+<p><br></p>
+</div>
+<div id="what-new-questions-arose" class="section level3">
+<h3>What new questions arose?</h3>
+<p>After reviewing research on the Boston Marathon, we recognized that weather can be an important driving factor in run times. Because of this, we added a section on weather analysis. We hope to examine the weather overtime during the marathons and the relationship between temperature and run times among champions and participants.</p>
+<p>We also wanted to examine how the winners of the Boston Marathon compared to the fastest time across all marathons for the same year. To do this we scrapped another data set from the web which had a list of the record times from 1908 to 2018, though not every year in between was included.</p>
+<p><br></p>
+</div>
+</div>
+<div id="sources-of-data" class="section level2">
+<h2>Sources of Data</h2>
+<p><br></p>
+<div id="github-repository-boston-marathon-datasets" class="section level3">
+<h3>Github Repository Boston Marathon Datasets</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Background</span> While looking for datasets, we found a Github repository that contained csv files with data compiled from 1897-2018 and decided to utilize this data for our project.</p></li>
+<li><p><span style="text-decoration:underline">Scraping Method</span> Data was available in a list of Excel documents organized by year. We imported the CSV files via a function due to the unique formatting of data before and after 2014. We excluded data before 1900 due to severely missing data, and data from 2013 due to the Boston bombing potentially causing bias.</p></li>
+<li><p><span style="text-decoration:underline">Cleaning</span> We first imported a list of file names using list.files. Then using the file name list, we imported data sets as nested data frames and unested them to form our raw data set. We included a new column showing the years our data are from, and coalesced city and residence data. We cleaned unrecognizable symbols in participants’ names using str_replace_all. Due to the inconsistencies in the country data, we then renamed the country values to have uniform names. Lastly, we dropped columns file_name, residence, first_name, and last_name since the data are being presented elsewhere.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="boston-marathon-champions-dataset" class="section level3">
+<h3>Boston Marathon Champions Dataset</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Background</span> To add to our existing dataset that was void of the place of residence for winners before the year 2000, we found a dataset that provided the name, year, and residence of champions of the Boston Marathon in the men’s open, women’s open, and wheelchair division all the way back to 1897 on a website dedicated to the <a href="https://www.baa.org/races/boston-marathon/results/champions">Boston Marathon</a>.</p></li>
+<li><p><span style="text-decoration:underline">Scraping Method</span> Data was available in an Excel document with multiple spreadsheets. We imported each sheet separately from the Excel document using read_excel to add the following datasets: men’s open champion dataset, women’s open champion dataset, men’s wheelchair division champions dataset, and woman’s wheelchair division champions dataset.</p></li>
+<li><p><span style="text-decoration:underline">Cleaning</span> We first cleaned the variable names using janitor::clean_names. We then removed the year 2013 from the data, the year of the bombing, for the potential of biased estimates. Additionally, the official times of runners were incorrectly imported as a date and a time. We separated this variable and deleted the incorrect date portion. We repeated this process for the 4 datasets we imported. We also added a variable for gender.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="weather-dataset" class="section level3">
+<h3>Weather Dataset</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Background</span> The weather conditions during the Boston marathon for the past 20 years was found on the <a href="https://www.baa.org/races/boston-marathon/history">official website</a> for the Boston Marathon at the bottom of the page.</p></li>
+<li><p><span style="text-decoration:underline">Scraping Method</span> Data was available in an Excel format and imported using read_excel.</p></li>
+<li><p><span style="text-decoration:underline">Cleaning</span> We first cleaned data using janitor::clean_names. Similar to previous data cleanings, we then removed the year 2013. We separated the wind variable into direction, minimum speed, and maximum speed. We then changed the formats of the variables for wind speed to numeric so we could create an additional variable that takes the average of the wind minimum speed and maximum speed.</p></li>
+</ul>
+<p><br> <br></p>
+</div>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span style="text-decoration:underline">Results</span></h1>
+<p>The results of our visualizations and analysis can be found on the following pages:</p>
+<ul>
+<li><a href="https://symusick.github.io/bostonmarathon.github.io/demo.html">Runner Demographics</a></li>
+<li><a href="https://symusick.github.io/bostonmarathon.github.io/time.html">Winning Time Trends</a></li>
+<li><a href="https://symusick.github.io/bostonmarathon.github.io/geo.html">Geographic Analysis of Champions</a></li>
+<li><a href="https://symusick.github.io/bostonmarathon.github.io/weather.html">Weather Analysis</a></li>
+</ul>
+<p><br></p>
+<div id="demographics-exploratory-analysis" class="section level2">
+<h2>Demographics Exploratory Analysis</h2>
+<p><br></p>
+<div id="age-bar-chart" class="section level3">
+<h3>Age Bar Chart</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To create a bar chart of the age distribution for the Boston Marathon from 1900-2019, we began by selecting the age variable and dropping missing age values. Then, we used plotly to create an interactive plot that shows the age and the number of participants at each age year. Additionally, there is an option to hover over each bar within the chart to see the exact age and number of participants at that age.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We notice that the majority of participants in the Boston marathon from 1900-2019 are 35-50 years old, with the most common age being 40. Approximately 21,000 of our 404,727 participants are 40 years old. We also notice that at 5 year age increments, from 40 to 60 years old, ie. 45, 50, 55, there appears to be a higher number of participants compared with the directly surrounding age years.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="age-histogram" class="section level3">
+<h3>Age Histogram</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> See above.</p></li>
+<li><p><span style="text-decoration:underline">Results</span>This histogram shows the age distribution of participants in %’s of total participants in 10 year segments. We see that in the age range of 35-45, there is the highest percentage of participants, approximately 33%.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="gender-bar-chart---percent" class="section level3">
+<h3>Gender Bar Chart - Percent:</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To create a bar chart for gender distribution, we selected the gender variable, dropped missing values, created a new variable to find the percent of the total that lie within each gender category, by computing n/sum(n), then created a variable that converts the pct variable into a percentage to utilize in the plot.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> The graph shows that from 1900-2019, approximately 66% of Marathon participants were male and 34% of Marathon runners were female. There is a large discrepancy between genders.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="number-of-male-and-female-participants-over-time" class="section level3">
+<h3>Number of Male and Female Participants Over Time</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> We may wonder if the number of participants in each category has changed over time, and if so by how much? To determine how the distribution of male and female participants has changed over time. We grouped by year and gender, then used counts to determine the number of participants at each year for each gender. Using plotly, you can hover over to see each year, number of participants, and the gender.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> The plot reveals that female participation did not begin until ~1972, while male participation began in 1900 - according to our dataset. While there has been an increase in female runners, there is still approximately a ~2,500 participant discrepancy between gender participation. Also of interest is that the graph shows that in 1996, there was a steep increase in participants among both males and females, and this is likely because this was the 100th anniversary of the race.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="residence-country-of-participants-over-time" class="section level3">
+<h3>Residence Country of Participants Over Time</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> We assessed which countries Marathon participants reside in, specifically and how the distribution of these has changed over time. To do this, we first cleaned the data by grouping by country and year variables, and then finding the counts based on this grouping. We filtered to the most popular countries by only including those with 200 participants each year, as numerous countries were represented in our dataset.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> The plot shows that there are significantly more U.S. participants than other countries, although the number of participants from the U.S. appears to be decreasing from 2015 to 2016. The second most popular country is Canada, which also appears to be decreasing over time.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="number-of-participants-by-country" class="section level3">
+<h3>Number of Participants by Country</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To look at overall participation across countries, we first cleaned by finding the count of each country among participants. We focused on countries with greater than 500 participants from 1900-2019 in the Marathon. We then created plots to assess the most popular countries, and then excluded the U.S., then excluded Canada to see a full picture of where participants are from.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> The plot reveals, unsurprisingly, that a majority of marathon participants are from the U.S., and many are from Canada as well. After that, there are many countries which have similar levels of participation. We may wonder whether participation is likely associated with distance from the country, and those countries that are more likely to participate are closer in proximity. The plot shows, though, that there are many participants from countries very far away, such as Australia and China.</p></li>
+</ul>
+<p><br></p>
+</div>
+</div>
+<div id="geographic-exploratory-analysis-of-champions" class="section level2">
+<h2>Geographic Exploratory Analysis of Champions</h2>
+<p><br></p>
+<div id="map-of-male-champions-residence-map-of-female-champions-residence" class="section level3">
+<h3>Map of Male Champions Residence; Map of Female Champions Residence</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> Since residence data was only available from 2000 onwards, we filtered for above the year 1999. We then selected the variables of interest: year, city, state. We dropped any missing values for the variable for residence.</p></li>
+<li><p>Our goal was to create a map of where the champions of the Boston marathon are from but we quickly realized that we did not have latitude and longitude data available which was necessary to create a map. After consulting our TA, she provided us with a few options. Since we had the state and city data, we were able to use Excel’s “Geography” feature to obtain latitude and longitude data. To do this, we exported and loaded our data into Excel. We were then able to auto-populate the latitude and longitude by pressing on Excel’s “Geography” feature which converts geography type data into coordinates. We used the following instructions recommended by our TA to convert the <a href="https://www.mrexcel.com/excel-tips/find-latitude-and-longitude-for-each-city-in-excel/">data</a>.</p></li>
+<li><p>After reimporting our data with latitude and longitude values, we created 2 maps for males and female champions for the year 2000 onwards. Although, we were displeased with the lack of data in the maps. Since we only had data points for the year 2000 and beyond, and we were looking at the champion from each year, we only had a mere ~20 data points/map. After a quick search, we found that on the Boston Marathon’s official site, they had an additional <a href="https://www.baa.org/races/boston-marathon/results/champions">dataset</a> which provided the country of origin for each champion of the Boston Marathon dating back to 1897.</p></li>
+<li><p>While the Boston Marathon Champions Dataset included the countries that each winner was from starting from 1897, our original dataset included more precise locations, the city and the state a participant was from as well as the participant’s age. Because of this, we used the more precise data available from our original dataset (the years 2000 and beyond) and wanted to combine this with the Boston Marathon Champions Dataset for the years pre 2000. We filtered within each dataset for the years of interest.</p></li>
+<li><p>Before we combined the datasets, we needed to add in latitude and longitude data into the Boston Marathon Champions Dataset. Because our Boston Marathon Champions Dataset only included countries where winners were from and not the city and state, we could not use Excel’s “Geography” feature as we had before. Instead, we found an additional dataset with the latitude and longitude of common countries throughout the world and wanted to merge these datasets as recommended by our TA. To merge, we renamed the variables for where the runner is from to place and merged by this variable.</p></li>
+<li><p>We then needed to vertically combine the Boston Marathon Champions Dataset with the Github Repository Boston Marathon Datasets for each gender. We did this by ensuring all the variables and variable names between the datasets were the same – selecting for variables of interest, renaming the variable for name and place. Because our Github Repository Boston Marathon Datasets included age as a variable and we wanted to keep it, in our Boston Marathon Champions Dataset, we created a blank age variable prior to binding. We then used rbind to vertically combine datasets and we dropped any missing latitude and longitude values.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We were finally ready to create a map. We used leaflet to create 2 maps of the champions’ residence by gender. We also added markers for name, year, official time, age, and gender.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="plot-of-official-times-of-champions-by-year-in-the-open-division" class="section level3">
+<h3>Plot of Official Times of Champions by Year in the Open Division</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> Because we only wanted the country of residence, we used the Boston Marathon Champions Dataset. We wanted to create a plot with both genders so we combined the datasets vertically using rbind. Prior to binding, we created a gender variable within each dataset so we could still decipher the gender of the winners once the datasets were combined. We also dropped missing values for the variable country.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We used ploty to create a scatter plot so one can filter which countries they would like to see if desired. We also added labels for the name of the winner and gender.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="map-of-wheelchair-division-champions-residence" class="section level3">
+<h3>Map of Wheelchair Division Champions Residence</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To create this map, we used the exact same process outlined above for the maps of male and female champions’ residence. The only difference is for the wheelchair division, we decided to combine the male and female division because there was not a lot of data within each. Before combining, we created a variable for gender within each dataset so that once the data was merged, we still knew the gender of the participant. We then vertically merged the datasets using rbind.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We created two interactive maps by gender of wheelchair champions’ residences.</p></li>
+</ul>
+<p><br></p>
+</div>
+</div>
+<div id="weather-exploratory-analysis" class="section level2">
+<h2>Weather Exploratory Analysis</h2>
+<p><br></p>
+<div id="plot-of-weather-during-boston-marathons" class="section level3">
+<h3>Plot of Weather during Boston Marathons</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To create a scatter plot of weather during Boston marathons over time, we used plotly to create an interactive plot of temperature by year. We then used colors for sky conditions and made the size of the data points correlated to the average wind speed. We also added a label for average wind speed for each data point to see the specific measure.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We created an interactive plot of temperature by year.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="wind-analysis-during-boston-marathons" class="section level3">
+<h3>Wind Analysis during Boston Marathons</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To create a plot with the range of wind speed for each Boston Marathon by year, we used geom_segment. We used the wind speed min and max for each year to produce the y-axis bars. We added color to represent the direction of the wind.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We created a plot with the range of wind speed by year.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="comparison-between-champion-times-and-weather" class="section level3">
+<h3>Comparison between Champion Times and Weather</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> We used plotly to create an interactive plot of official times by temperature. To create this plot, we had to combine our Weather Dataset with the Boston Marathon Champions Dataset. Prior to merging, we filtered the Boston Marathon Champions Dataset for the year 2000 and above so the range of years are the same between the datasets. We then merged by year. We change the temperature to a numeric variable. We then used colors for sky conditions and made the size of the data points correlated to the average wind speed. We also added a label for the name, year, and country of residence.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We created an interactive plot of official champions’ times by temperature.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="comparison-between-participants-times-and-weather" class="section level3">
+<h3>Comparison between Participants Times and Weather</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To create a boxplot of official times in seconds by temperature, we used plotly to create an interactive plot. We used the merged dataset from the previous plot and changed the seconds variable to numeric. We then used colors for sky conditions.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We created a boxplot of official champions’ times in seconds by temperature.</p></li>
+</ul>
+<p><br></p>
+</div>
+</div>
+<div id="trends-of-winning-times" class="section level2">
+<h2>Trends of Winning Times</h2>
+<p><br></p>
+<div id="boston-marathon-winners-over-time" class="section level3">
+<h3>Boston Marathon Winners Over Time</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To create a winners over time plot, we had to convert some of the variables from the existing dataset. From the boston dataframe, we converted the official time variable to a time variable using “as.POSIXct”, formatted to hour, minute second, converted year to a factor variable, and converted the place overall variable to numeric. Then we were able to filter out only the overall winners and plot their winning times over the year they won.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> Results: This plot shows that over time, the Boston marathon winners are getting faster. There also seems to be some data that was recorded incorrectly. Jim Knaub and Franz Nietlispach are reported as having an official time of 1:22:17 and 1:25:59 but the fastest marathon ever run is 1:59 (though not recorded <a href="https://www.nytimes.com/2019/10/12/sports/eliud-kipchoge-marathon-record.html">officially</a>) The fastest time ever run (excluding the sub two hour times) for the Boston Marathon was run by Martin E Duffy in 1975, with a time of 2:04:54.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="comparing-male-and-female-winning-times-over-the-years" class="section level3">
+<h3>Comparing Male and Female Winning Times Over the Years</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> To create a plot comparing the fastest times for male and female winners over time, we used the same cleaned up variables as the previous plot. We also had to remove the missing values for gender, and relabel the variable so that it read “male” and “female.” From there we filtered the other participants by only including those who had a “gender result” of one. Then we were able to plot the winners over time by the binary gender variable.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> We can see that male and female winners seem to be following the same general trend of decreasing marathon winning times over the year, but that trend is much more pronounced in males than among females. We can also see when the Boston Marathon allowed women to compete in 1972, and that the first ever female winner was Nina Kuscsik, with a time of 3:10:26. The data from 1993 and 1995 seems to have errors, just as the men’s times. This data set shows that Jean Driscoll was the female winner for both years with times of 1:34:50 and 1:40:42. The current world record holder for the fastest female marathon ran is Brigid Kosgei who ran it in 2:14:04 in <a href="https://www.worldathletics.org/records/by-discipline/road-running/marathon/outdoor/women">2019</a>.</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="record-marathon-times" class="section level3">
+<h3>Record Marathon Times</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> We found the fastest marathon times as recorded by the International Amateur Athletic Federation (IAFF) on this <a href="https://www.topendsports.com/sport/athletics/record-marathon.htm">website</a>, but not every year from 1900 to 2018 was included in their records. To scrape the data, we used Selector Gadget to select the table which showed the record holders over the years and their demographic information and import it into R. To clean the data, we had to convert the data from a list format to a tibble. Most of the variables were imported in the correct format except for the <code>time</code> variable which was imported as a <code>character</code> variable and the date format which included extra information. Then, to clean <code>time</code> we converted it using <code>as.POSIXCT</code> and then formatted it to only show the time (leaving off the date of conversion). In order to be consistent with our original data set, we only wanted to include <code>year</code> instead of the full date including day and month. We separated the date into the three components and then only selected for “year” to appear in the data set.</p></li>
+<li><p><span style="text-decoration:underline">Results</span> The plot shows the dramatic decrease in fastest recorded marathon times over the years. In 1908 the fastest recorded time was run by Johnny Hayes in the London Marathon in 2:55:18, compared to the current record holder, Eliud Kipchoge, running the 2:01:39 in the Berlin Marathon in 2018.</p></li>
+</ul>
+<p><br></p>
+</div>
+</div>
+<div id="analytic-methods" class="section level2">
+<h2>Analytic Methods</h2>
+<p><br></p>
+<div id="linear-regression-model-building" class="section level3">
+<h3>Linear Regression Model building:</h3>
+<ul>
+<li><p><span style="text-decoration:underline">Process</span> Based on preliminary data visualizations, we hypothesized that runner age and country of residence would be predictors of their marathon time. However, participant counts for many of the countries were very small (&gt;5) so we decided to categorize the country_residence variable by continent. We also decided, a-priori, to separate the models by sex. This was because data visualizations showed noticeable differences by sex. We were interested in how these differences might impact the predictors of marathon time. We ended up with a crude model of age and continent as predictors of marathon time (seconds) for both men and women.</p></li>
+<li><p>We were also curious to know if the speed at which a runner starts the marathon is a predictor of overall marathon time. To test this we converted the 5k time to seconds then included that in our models. The full models modeled age, continent, and 5k time (fivek_seconds) as predictors of marathon time (seconds).</p></li>
+<li><p>We created RMSE plots to compare the the full models against the crude models by sex.</p></li>
+<li><p><span style="text-decoration:underline">Results</span></p></li>
+<li><p>Men: All predictors in the crude model were significant. For every one year increase in age, marathon time increases by 76.02 seconds. Residing in Africa, Australia, Europe, or South America predicts a decrease in marathon time, while living in Asia predicts an increase, as compared to North America.</p></li>
+<li><p>Time for the first 5k of the marathon was a significant predictor when added to the model. Every one second increase in 5k time increases marathon time by 9.13 seconds. Age remained significant, but became a weaker predictor (9.25 second increase in marathon time for every one year increase in age). In the full model, only Asia and Europe remained significant. Residence in Asia and Europe were associated with an increase in marathon time.</p></li>
+<li><p>Comparing the crude and full models via RMSE plot showed the full model had a much lower RMSE. This indicates it had better model fit than the crude model.</p></li>
+<li><p>Women: All predictors in the crude model were significant, with the exception of the Europe category of the continent variable. For every one year increase in age, marathon time increases by 43.54 seconds. Residing in Africa, Australia, or South America predicts a significant decrease in marathon time, while living in Asia predicts an increase, as compared to North America.</p></li>
+<li><p>Time for the first 5k of the marathon was a significant predictor when added to the model. Every one second increase in 5k time increases marathon time by 9.44 seconds. Age remained significant, but became a weaker predictor (8.78 second increase in marathon time for every one year increase in age). In the full model, Asia, Europe, and South America remained significant. Residence in Asia and Europe were associated with an increase in marathon time. South America was associated with a decrease in marathon time.</p></li>
+<li><p>Comparing the crude and full models via RMSE plot showed the full model had a much lower RMSE. This indicates it had better model fit than the crude model.</p></li>
+</ul>
+<p><br> <br></p>
+</div>
+</div>
+</div>
+<div id="discussion" class="section level1">
+<h1><span style="text-decoration:underline">Discussion</span></h1>
+<p><br></p>
+<div id="findings" class="section level2">
+<h2>Findings</h2>
+<p>Most of the participants are between the ages of 35-50 years old when assessing the marathon from 1900-2019. There is also a large spike in participation at the age of 40 and continued spikes at 45, 50, and 55. The largest percentage of participants, 33% are within the age range of 35-45. Out of the total participants, 66% are male and 34% are female. There was a great spike in participation around the year 1996. Participants from the US far outnumber that of any other country by at least 80k.</p>
+<p>Over time we see that the fastest marathon time has been decreasing dramatically. The period between 1906 and 1924 had a slight drop in the fastest running time. When assessing the fastest recorded marathon times, we similarly see a dramatic decrease when assessing data starting from the 1900’s.</p>
+<p>When mapping the residences of male champions from 1900 onwards, we see the majority, 44 are from the United States, 20 are from Kenya, and 10 are from Japan. Among females, the majority of champions are from Kenya. Before the 1950’s most of the winners were from the US and Canada, now the winners are predominantly from Kenya. In the wheelchair division we are seeing the majority of winners from the US or Switzerland.</p>
+<p>When assessing the weather during the Boston marathon from 2000 onwards, the temperature typically ranged from 40-70 degrees with an exception in 2015 with a temperature of 87 degrees. After 2013, there has been dramatically less wind during the Boston Marathon. As temperature increases, the fastest time also increases slightly.</p>
+<p>Linear regression showed that age was a significant predictor of marathon time. Runners from Asia and Europe consistently had longer times than runners from North America, across both men and women. Time at 5k was also significantly associated with overall marathon time for men and women.</p>
+<p><br></p>
+<div id="are-the-findings-as-expected" class="section level5">
+<h5><em>Are the Findings as Expected?</em></h5>
+<p>While some of the findings were expected, we were shocked by others. We were surprised to see that there was a large spike in participation at age 40 and smaller but prominent spikes at 45,50, and 55 but unsurprised to see that most participants were between 35-50. We also noticed a large spike in participation in the year 1966. Upon further research, we found that this is the first year women ran the whole marathon. We were also astounded by the large differences in participation by gender that continued to differ over time.</p>
+<p>While we expected most of the participants to be from the United States, we found it intriguing that over the years more and more of the champions came from outside the US, particularly Africa. Over the past 100 years, it was astonishing to see that the fastest running time has decreased by over a minute. Eldoret and Meru, communities in Kenya are two places where multiple champions of the marathon are from in recent years, an interesting finding.</p>
+<p>We were also surprised that many winners with the lowest ever recorded time of the wheelchair division were from Switzerland and South Africa. While we expected to see a large positive association between temperature and fasted marathon time each year, the graph shows a small, potentially insignificant, association. It was fascinating to see that the lowest median run times are around 55 degrees. When deciding whether or not to run a marathon, you may want to consider what the predicted temperature will be for the race date!</p>
+<p>We anticipated that age and continent would predict marathon time; however, we were unsure about 5k time. We thought 5k time might not be a predictor because those who do well might pace themselves, while those who have longer overall times might run a quick 5k, but burn out by the end. The result wasn’t surprising, but we weren’t certain before we ran the model.</p>
+<p><br></p>
+</div>
+</div>
+<div id="significance-of-finding" class="section level2">
+<h2>Significance of Finding</h2>
+<p>From the year the marathon started, it continues to be male-dominated, with around 2000 more males participating each year than females. In fact, there was no division for females until 1972. This data could be used to begin a drive to encourage more female participation. The large spark in marathon participation at age 40 could be due to a sudden interest in running later in life at one’s 40th birthday. In the future, we could further study the spikes in participation at age 40, 50, and 55.</p>
+<p>When we assess data over time, we are seeing more and more winners from outside the US, particularly from Africa. The shift in 1950 from predominantly US winners to winners outside the US marks an interesting time point in history that could be further analyzed. The overall trend is that the winners are running faster. We can see this when we look at the winning times over the years. As the technology of running gear and training regimes improve, we can expect to see the times to continue to decrease, at least to a certain point.</p>
+<p>Some of the fastest runners come from communities in Eldoret and Meru in Kenya. These communities could further be analyzed to see what makes them some of the fastest runners.</p>
+<p>The lowest median marathon times for participants occurred around 55 degrees. According to a study called “Import of Environmental Parameters on Marathon Running Performance”, the ideal temperature for running for nonprofessional athletes is around 50 degrees and 37 degrees for professionals. This suggests that the majority of runners in the marathon are likely non-professional and would run fastest in temperatures around 50 degrees.</p>
+<p><br> <br></p>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1><span style="text-decoration:underline">Conclusion</span></h1>
+<p>Running a marathon can take months of preparation, determination, and hard work. A marathon is not simply a race, it is often a method for stress relief, a great form of exercise, and an amazing achievement. In the future, we hope our analysis sheds light on the marathon and encourages more people to run for the simple joy of running, helps a competitive few recognize what variables are associated with winning, and maybe even aids analysts in predicting the characteristics of Boston’s next marathon champion.</p>
 </div>
 
 
